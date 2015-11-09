@@ -3,44 +3,87 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
+	"os"
 	"strconv"
 	"strings"
 )
 
-var (
-	batBaseDir        = "/status"
-	batStatusFile     = *batDir + "/status"
-	batChargeNowFile  = *batDir + "/charge_now"
-	batChargeFullFile = *batDir + "/charge_full"
+const (
+	fACOnline string = "/sys/class/power_supply/AC/online"
 )
 
-// The Battery function returns the percentage of laptop battery charge remaining as a string.
-func Battery(statusFile string) string {
-	status, err := ioutil.ReadFile(batStatusFile)
-	check(err)
-	statusStr := string(status)
+// Battery represents system battery information.
+type Battery struct {
+	ChargeFull float64
+	ChargeNow  float64
+}
 
-	var prefix string
-	if statusStr == "Charging" {
-		prefix = "AC."
+type BatteryFiles struct {
+	Dir        string
+	ChargeFull string
+	ChargeNow  string
+}
+
+// Return *BatteryFiles based on input batDir.
+func NewBatteryFiles(batDir string) *BatteryFiles {
+	prefix := "charge"
+	chargePath := fmt.Sprintf("%s/%s%s", batDir, prefix, "_full")
+	// Sometimes file prefix changes, ex sometimes is "charge_full", sometimes "energy_full".
+	// Why? Who knows!
+	if _, err := os.Stat(chargePath); err != nil {
+		prefix = "energy"
 	}
+	return &BatteryFiles{
+		Dir:        batDir,
+		ChargeFull: fmt.Sprintf("%s/%s%s", batDir, prefix, "_full"),
+		ChargeNow:  fmt.Sprintf("%s/%s%s", batDir, prefix, "_now"),
+	}
+}
 
-	chargeNow, err := ioutil.ReadFile(batChargeNowFile)
+func (bf *BatteryFiles) NewBattery() *Battery {
+	// get full charge here (only need to read it once)
+	cBytes, err := ioutil.ReadFile(bf.ChargeFull)
 	check(err)
-	chargeNowStr := strings.Trim(string(chargeNow), "\n")
-	chargeNowFloat, err := strconv.ParseFloat(chargeNowStr, 64)
-	check(err)
-
-	chargeFull, err := ioutil.ReadFile(batChargeFullFile)
-	check(err)
-	chargeFullStr := strings.Trim(string(chargeFull), "\n")
+	b.ChargeFullStr = strings.Trim(string(cBytes), "\n")
 	chargeFullFloat, err := strconv.ParseFloat(chargeFullStr, 64)
 	check(err)
 
+	return &Battery{Dir: bf.Dir, bf.ChargeFull, bf.ChargeNow}
+}
+
+// Str returns battery info as a string.
+// Implements the StatusStringer interface.
+func (b *Battery) Str() string {
+	b.chargeFull()
+	b.chargeNow()
+	if b.charging() {
+		return fmt.Sprintf("AC.%s%%", b.ChargePctStr)
+	}
+	return fmt.Sprintf("%s%%", b.ChargePctStr)
+}
+
+// charging returns true if plugged in.
+func (b *Battery) charging() bool {
+	cByt, err := ioutil.ReadFile(fACOnline)
+	if err != nil {
+		log.Println(err)
+	}
+	// "0": false, "1": true
+	return string(cByt[0]) == "1"
+}
+
+func (b *Battery) getChargeNow() {
+	cBytes, err := ioutil.ReadFile(b.Dir + "/" + "charge_now")
+	check(err)
+	cStr := strings.Trim(string(cBytes), "\n")
+	b.ChargeNow, err = strconv.ParseFloat(cStr, 64)
+	check(err)
+}
+
+func (b *Battery) getChargePct() {
 	chargePct := chargeNowFloat / chargeFullFloat * 100.0
 	chargePctStr := strconv.FormatFloat(chargePct, 'f', 0, 64)
-
-	return fmt.Sprintf("%s%s%%", prefix, chargePctStr)
 }
 
 func check(err error) {

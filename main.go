@@ -7,15 +7,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"strings"
 	"time"
 )
 
-// The LoopFunc function allows functions to continuously return values to a channel at a specified delay.
-func LoopFunc(f func() string, c chan<- string, delay time.Duration) {
-	ticker := time.NewTicker(delay)
+// The loopStatus function sends status strings to a channel at a specified interval.
+func loopStatus(s *StatusStringer, c chan<- string, interval time.Duration) {
+	ticker := time.NewTicker(interval)
 	for range ticker.C {
-		c <- f()
+		c <- s.Str()
 	}
 }
 
@@ -36,23 +35,27 @@ func main() {
 	batchan := make(chan string)
 	loadchan := make(chan string)
 
-	go LoopFunc(Battery, batchan, time.Second*10)
-	go LoopFunc(LoadAvg, loadchan, time.Second*5)
+	go loopStatus(Battery, batchan, time.Second*10)
+	go loopStatus(LoadAvg, loadchan, time.Second*5)
 
+	var bat, load string
+	// When a message is received on a channel, update string
 	for {
 		select {
-		case bat := <-batchan:
-			fmt.Printf("%s", bat) //DEBUG
+		case bat = <-batchan:
+			fmt.Printf("%s\n", bat) //DEBUG
 			<-update
 			fallthrough
-		case load := <-loadchan:
-			fmt.Printf("%s", load) //DEBUG
+		case load = <-loadchan:
+			fmt.Printf("%s\n", load) //DEBUG
 			<-update
 			fallthrough
 		case <-update:
-			data := []string{bat, load}
-			dataStr := strings.Join(data, *ofs)
-			fmt.Printf("\r%s ", dataStr)
+			s := &Status{
+				OFS:      *ofs,
+				Elements: []string{bat, load},
+			}
+			fmt.Printf("\r%s", s.Str())
 		}
 	}
 	// END WIP
