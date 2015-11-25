@@ -1,11 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"syscall"
 )
 
-// The LoadAvg function returns the load average as a string.
+// LoadAvg returns the load average as a string.
 func LoadAvg() string {
 	si := new(syscall.Sysinfo_t)
 	err := syscall.Sysinfo(si)

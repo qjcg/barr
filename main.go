@@ -1,4 +1,4 @@
-/* The barr command prints out a status line (e.g. for use with dwm(1)).
+/*The barr command prints out a status line (e.g. for use with dwm(1)).
 
 Functions return strings usable in a statusbar context.
 */
@@ -7,76 +7,57 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os/exec"
+	"strings"
 	"time"
 )
 
-// The loopStatus function sends status strings to a channel at a specified interval.
-func loopStatus(s *StatusStringer, c chan<- string, interval time.Duration) {
-	ticker := time.NewTicker(interval)
-	for range ticker.C {
-		c <- s.Str()
+// StrFuncs returns a joined string from an OFS and list of functions returning strings.
+func StrFuncs(ofs string, fns ...func() string) string {
+	var data []string
+	for _, f := range fns {
+		data = append(data, f())
 	}
+	return strings.Join(data, ofs)
 }
 
 func main() {
-	batdir := flag.String("b", "/sys/class/power_supply/BAT0/", "base directory for battery info")
+	batdir := flag.String("b", fFirstBatDir, "base directory for battery info")
 	freq := flag.Duration("f", time.Second*5, "update frequency")
 	ofs := flag.String("s", "  ", "output field separator")
 	testMode := flag.Bool("t", false, "test mode")
 	flag.Parse()
 
-	//tsfmt := "Mon Jan 2, 3:04pm"
+	tsfmt := "Mon Jan 2, 3:04pm"
 	if *testMode {
 		*freq = time.Millisecond
-		//tsfmt = "Mon Jan 2, 3:04:05.000pm"
+		tsfmt = "Mon Jan 2, 3:04:05.000pm"
 	}
 
-	// BEGIN WIP
-	batchan := make(chan string)
-	loadchan := make(chan string)
+	var batFn func() string
+	b, err := NewBattery(*batdir)
+	if err != nil {
+		batFn = func() string { return "" }
+	} else {
+		batFn = b.Str
+	}
 
-	go loopStatus(Battery, batchan, time.Second*10)
-	go loopStatus(LoadAvg, loadchan, time.Second*5)
+	var data []string
+	var output string
+	ticker := time.NewTicker(*freq)
+	for t := range ticker.C {
+		data = []string{
+			batFn(),
+			LoadAvg(),
+			t.Format(tsfmt),
+		}
+		output = strings.Join(data, *ofs)
+		output = strings.Trim(output, " ")
 
-	var bat, load string
-	// When a message is received on a channel, update string
-	for {
-		select {
-		case bat = <-batchan:
-			fmt.Printf("%s\n", bat) //DEBUG
-			<-update
-			fallthrough
-		case load = <-loadchan:
-			fmt.Printf("%s\n", load) //DEBUG
-			<-update
-			fallthrough
-		case <-update:
-			s := &Status{
-				OFS:      *ofs,
-				Elements: []string{bat, load},
-			}
-			fmt.Printf("\r%s", s.Str())
+		if *testMode {
+			fmt.Printf("\r%s ", output)
+		} else {
+			_ = exec.Command("xsetroot", "-name", output).Run()
 		}
 	}
-	// END WIP
-
-	//go func() {
-	//	ticker := time.NewTicker(*freq)
-	//	for t := range ticker.C {
-	//		data := []string{
-	//			Battery(),
-	//			LoadAvg(),
-	//			t.Format(tsfmt),
-	//		}
-	//		output := strings.Join(data, *ofs)
-
-	//		if *testMode {
-	//			fmt.Printf("\r%s ", output)
-	//		} else {
-	//			_ = exec.Command("xsetroot", "-name", output).Run()
-	//		}
-	//	}
-	//}()
-
-	fmt.Scanln()
 }
