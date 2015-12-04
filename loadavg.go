@@ -11,7 +11,7 @@ func LoadAvg() string {
 	si := new(syscall.Sysinfo_t)
 	err := syscall.Sysinfo(si)
 	if err != nil {
-		log.Fatal("couldn't get sysinfo")
+		log.Fatal("couldn't get sysinfo:", err)
 	}
 
 	// see https://github.com/capnm/sysinfo/blob/master/sysinfo.go
