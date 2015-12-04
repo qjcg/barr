@@ -30,7 +30,7 @@ type Battery struct {
 func NewBattery(batDir string) (*Battery, error) {
 	// return early if batDir doesn't exist
 	if _, err := os.Stat(batDir); os.IsNotExist(err) {
-		return &Battery{}, err
+		return nil, err
 	}
 
 	fChargeFull := fmt.Sprintf("%s/%s", batDir, "charge_full")
@@ -40,7 +40,7 @@ func NewBattery(batDir string) (*Battery, error) {
 
 		// If we still can't find the file after substituting the "energy" prefix, return
 		if _, err := os.Stat(fChargeFull); os.IsNotExist(err) {
-			return &Battery{}, err
+			return nil, err
 		}
 	}
 
