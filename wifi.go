@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 )
 
 type WifiData struct {
@@ -14,17 +15,20 @@ func getESSID() (string, error) {
 	cmd := exec.Command("iwgetid", "--raw")
 	cmdOut, err := cmd.Output()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return string(cmdOut), nil
+	essid := strings.Trim(string(cmdOut), "\n")
+	return essid, nil
 }
 
 // TODO: use /proc/net/wireless
 func getQuality(ifname string) (float64, error) {
+	return 0.0, nil
 }
 
 func NewWifiData(ifname string) (*WifiData, error) {
+	return nil, nil
 }
 
 func (w *WifiData) Str() string {
