@@ -62,9 +62,9 @@ func NewBattery(batDir string) (*Battery, error) {
 
 // Str returns battery info as a string.
 func (b *Battery) Str() string {
-	fmtStr := "%s%%"
+	fmtStr := "🔋  %s%%"
 	if b.charging() {
-		fmtStr = "AC.%s%%"
+		fmtStr = "🔌 %s%%"
 	}
 
 	b.getChargeNow()
