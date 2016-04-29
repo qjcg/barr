@@ -25,6 +25,7 @@ func main() {
 	batdir := flag.String("b", fFirstBatDir, "base directory for battery info")
 	freq := flag.Duration("f", time.Second*5, "update frequency")
 	ofs := flag.String("s", "  ", "output field separator")
+	//wifiIface := flag.String("w", "", "wifi card interface name")
 	testMode := flag.Bool("t", false, "test mode")
 	flag.Parse()
 
@@ -46,7 +47,9 @@ func main() {
 	var output string
 	ticker := time.NewTicker(*freq)
 	for t := range ticker.C {
+		essid, _ := getESSID()
 		data = []string{
+			essid,
 			batFn(),
 			LoadAvg(),
 			t.Format(tsfmt),
