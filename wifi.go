@@ -75,7 +75,11 @@ func NewWifiData(ifname string) (*WifiData, error) {
 		return nil, err
 	}
 
-	return &WifiData{ESSID: essid, Ifname: ifname, Quality: quality}, nil
+	return &WifiData{
+		ESSID:   essid,
+		Ifname:  ifname,
+		Quality: quality,
+	}, nil
 }
 
 func (w *WifiData) Update() error {
