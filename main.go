@@ -12,6 +12,10 @@ import (
 	"time"
 )
 
+type Stringer interface {
+	Str() string
+}
+
 // StrFuncs returns a joined string from an OFS and list of functions returning strings.
 func StrFuncs(ofs string, fns ...func() string) string {
 	var data []string
@@ -25,7 +29,7 @@ func main() {
 	batdir := flag.String("b", fFirstBatDir, "base directory for battery info")
 	freq := flag.Duration("f", time.Second*5, "update frequency")
 	ofs := flag.String("s", "  ", "output field separator")
-	//wifiIface := flag.String("w", "", "wifi card interface name")
+	wifiIface := flag.String("w", "", "wifi card interface name")
 	testMode := flag.Bool("t", false, "test mode")
 	flag.Parse()
 
@@ -43,13 +47,22 @@ func main() {
 		batFn = b.Str
 	}
 
+	var wifiFn func() string
+	if *wifiIface != "" {
+		wd, err := NewWifiData(*wifiIface)
+		if err != nil {
+			wifiFn = func() string { return "" }
+		} else {
+			wifiFn = wd.Str
+		}
+	}
+
 	var data []string
 	var output string
 	ticker := time.NewTicker(*freq)
 	for t := range ticker.C {
-		essid, _ := getESSID()
 		data = []string{
-			essid,
+			wifiFn(),
 			batFn(),
 			LoadAvg(),
 			t.Format(tsfmt),
