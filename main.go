@@ -21,6 +21,10 @@ func StrFuncs(ofs string, fns ...func() string) string {
 	return strings.Join(data, ofs)
 }
 
+func emptyString() string {
+	return ""
+}
+
 func main() {
 	batdir := flag.String("b", fFirstBatDir, "base directory for battery info")
 	freq := flag.Duration("f", time.Second*5, "update frequency")
@@ -38,24 +42,18 @@ func main() {
 	// FIXME: The below two stanzas are hideous. Refactor so that all bar
 	// items use an interface with predictable behaviour.
 
-	var batFn func() string
+	batFn := emptyString
 	b, err := NewBattery(*batdir)
-	if err != nil {
-		batFn = func() string { return "" }
-	} else {
+	if err == nil {
 		batFn = b.Str
 	}
 
-	var wifiFn func() string
+	wifiFn := emptyString
 	if *wifiIface != "" {
 		wd, err := NewWifiData(*wifiIface)
-		if err != nil {
-			wifiFn = func() string { return "" }
-		} else {
+		if err == nil {
 			wifiFn = wd.Str
 		}
-	} else {
-		wifiFn = func() string { return "" }
 	}
 
 	var data []string
