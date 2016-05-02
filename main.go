@@ -12,10 +12,6 @@ import (
 	"time"
 )
 
-type Stringer interface {
-	Str() string
-}
-
 // StrFuncs returns a joined string from an OFS and list of functions returning strings.
 func StrFuncs(ofs string, fns ...func() string) string {
 	var data []string
@@ -39,6 +35,9 @@ func main() {
 		tsfmt = "Mon Jan 2, 3:04:05.000pm"
 	}
 
+	// FIXME: The below two stanzas are hideous. Refactor so that all bar
+	// items use an interface with predictable behaviour.
+
 	var batFn func() string
 	b, err := NewBattery(*batdir)
 	if err != nil {
@@ -55,6 +54,8 @@ func main() {
 		} else {
 			wifiFn = wd.Str
 		}
+	} else {
+		wifiFn = func() string { return "" }
 	}
 
 	var data []string
