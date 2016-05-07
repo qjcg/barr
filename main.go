@@ -1,7 +1,4 @@
-/*The barr command prints out a status line (e.g. for use with dwm(1)).
-
-Functions return strings usable in a statusbar context.
-*/
+// The barr command prints out a status line (e.g. for use with dwm(1)).
 package main
 
 import (
@@ -10,64 +7,49 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+
+	barr "github.com/qjcg/barr/lib"
 )
 
-// StrFuncs returns a joined string from an OFS and list of functions returning strings.
-func StrFuncs(ofs string, fns ...func() string) string {
+// Get returns a status string from an OFS and list of BarStringers.
+func Get(ofs string, bs []*BarStringer) string {
 	var data []string
-	for _, f := range fns {
-		data = append(data, f())
-	}
-	return strings.Join(data, ofs)
-}
+	var output string
 
-func emptyString() string {
-	return ""
+	for _, b := range bs {
+		b.Update()
+		data = append(data, b.Str())
+	}
+
+	output = strings.Join(data, ofs)
+	output = strings.Trim(output, " ")
+
+	return output
 }
 
 func main() {
-	batdir := flag.String("b", fFirstBatDir, "base directory for battery info")
-	freq := flag.Duration("f", time.Second*5, "update frequency")
+	batdir := flag.String("b", barr.fFirstBatDir, "base directory for battery info")
+	freq := flag.Duration("f", barr.freqNormal, "update frequency")
 	ofs := flag.String("s", "  ", "output field separator")
 	wifiIface := flag.String("w", "", "wifi card interface name")
 	testMode := flag.Bool("t", false, "test mode")
 	flag.Parse()
 
-	tsfmt := "Mon Jan 2, 3:04pm"
+	var bs []*barr.BarStringer
+	bs = append(bs, &barr.Battery{})
+	if *wifiIface != "" {
+		bs = append(bs, &WifiData{Iface: *wifiIface})
+	}
+
 	if *testMode {
-		*freq = time.Millisecond
+		*freq = barr.freqTest
 		tsfmt = "Mon Jan 2, 3:04:05.000pm"
 	}
 
-	// FIXME: The below two stanzas are hideous. Refactor so that all bar
-	// items use an interface with predictable behaviour.
-
-	batFn := emptyString
-	b, err := NewBattery(*batdir)
-	if err == nil {
-		batFn = b.Str
-	}
-
-	wifiFn := emptyString
-	if *wifiIface != "" {
-		wd, err := NewWifiData(*wifiIface)
-		if err == nil {
-			wifiFn = wd.Str
-		}
-	}
-
-	var data []string
 	var output string
 	ticker := time.NewTicker(*freq)
 	for t := range ticker.C {
-		data = []string{
-			wifiFn(),
-			batFn(),
-			LoadAvg(),
-			t.Format(tsfmt),
-		}
-		output = strings.Join(data, *ofs)
-		output = strings.Trim(output, " ")
+		output = Get(*ofs, bs)
 
 		if *testMode {
 			fmt.Printf("\r%s ", output)

@@ -10,9 +10,7 @@ import (
 	"strings"
 )
 
-const (
-	wifiDataFile = "/proc/net/wireless"
-)
+const wifiDataFile = "/proc/net/wireless"
 
 var (
 	wifiQualityVal = regexp.MustCompile(`\w:\s+\d+\s+(\d+)\.`)
@@ -64,24 +62,7 @@ func getQuality(ifname string) (int, error) {
 	return quality, nil
 }
 
-func NewWifiData(ifname string) (*WifiData, error) {
-	essid, err := getESSID()
-	if err != nil {
-		return nil, err
-	}
-
-	quality, err := getQuality(ifname)
-	if err != nil {
-		return nil, err
-	}
-
-	return &WifiData{
-		ESSID:   essid,
-		Ifname:  ifname,
-		Quality: quality,
-	}, nil
-}
-
+// Implement the BarStringer interface.
 func (w *WifiData) Update() error {
 	var err error
 	w.ESSID, err = getESSID()
@@ -97,9 +78,9 @@ func (w *WifiData) Update() error {
 	return nil
 }
 
+// Implement the BarStringer interface.
 func (w *WifiData) Str() string {
-	err := w.Update()
-	if err != nil {
+	if w.ESSID == "" || w.Quality == 0 {
 		return ""
 	}
 	return fmt.Sprintf("%s:%.0f%%", w.ESSID, float64(w.Quality)/70*100)
