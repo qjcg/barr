@@ -14,17 +14,18 @@ const (
 	freqTest = time.Millisecond
 )
 
-type Date struct {
+type TimeStamp struct {
 	Fmt  string
 	Freq time.Duration
+	time
 }
 
 // Implement the BarStringer interface.
-func (d *Date) Str() string {
-	return time.Format(d.Fmt)
+func (ts *TimeStamp) Str() string {
+	return time.Format(ts.Fmt)
 }
 
 // Implement the BarStringer interface.
-func (d *Date) Update() error {
+func (ts *TimeStamp) Update() error {
 	return nil
 }

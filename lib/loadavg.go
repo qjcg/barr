@@ -1,4 +1,4 @@
-package main
+package barr
 
 import (
 	"fmt"
@@ -16,10 +16,6 @@ type LoadAvg struct {
 	load15 float64
 }
 
-func (la *LoadAvg) Str() string {
-	return fmt.Sprintf("%.2f %.2f %.2f", la.load1, la.load5, la.load15)
-}
-
 func (la *LoadAvg) Update() {
 	si := new(syscall.Sysinfo_t)
 	err := syscall.Sysinfo(si)
@@ -30,4 +26,8 @@ func (la *LoadAvg) Update() {
 	la.load1 = float64(si.Loads[0]) / scale
 	la.load5 = float64(si.Loads[1]) / scale
 	la.load15 = float64(si.Loads[2]) / scale
+}
+
+func (la *LoadAvg) Str() string {
+	return fmt.Sprintf("%.2f %.2f %.2f", la.load1, la.load5, la.load15)
 }
