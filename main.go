@@ -35,6 +35,7 @@ func main() {
 	testMode := flag.Bool("t", false, "test mode")
 	flag.Parse()
 
+	// append BarStringers we want to bs to compose our output
 	var bs []*barr.BarStringer
 	bs = append(bs, &barr.Battery{})
 	if *wifiIface != "" {
