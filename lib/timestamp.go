@@ -17,12 +17,12 @@ const (
 type TimeStamp struct {
 	Fmt  string
 	Freq time.Duration
-	time
+	Time time.Time
 }
 
 // Implement the BarStringer interface.
 func (ts *TimeStamp) Str() string {
-	return time.Format(ts.Fmt)
+	return ts.Time.Format(ts.Fmt)
 }
 
 // Implement the BarStringer interface.
