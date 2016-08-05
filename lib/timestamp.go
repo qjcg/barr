@@ -6,12 +6,12 @@ import (
 
 const (
 	// Normal mode
-	fmtNormal  = "Mon Jan 2, 3:04pm"
-	freqNormal = time.Second * 5
+	FmtNormal  = "Mon Jan 2, 3:04pm"
+	FreqNormal = time.Second * 5
 
 	// Test mode (more frequent updates)
-	fmtTest  = "Mon Jan 2, 3:04:05.000pm"
-	freqTest = time.Millisecond
+	FmtTest  = "Mon Jan 2, 3:04:05.000pm"
+	FreqTest = time.Millisecond
 )
 
 type TimeStamp struct {
