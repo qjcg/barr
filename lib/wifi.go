@@ -13,7 +13,7 @@ import (
 const wifiDataFile = "/proc/net/wireless"
 
 var (
-	wifiQualityVal = regexp.MustCompile(`\w:\s+\d+\s+(\d+)\.`)
+	wifiQuality = regexp.MustCompile(`\w:\s+\d+\s+(\d+)\.`)
 )
 
 type WifiData struct {
@@ -49,7 +49,7 @@ func getQuality(ifname string) (int, error) {
 		// only interested in lines containing "ifname"
 		m, err := regexp.Match(ifname, lineBytes)
 		if m {
-			result := wifiQualityVal.FindSubmatch(lineBytes)
+			result := wifiQuality.FindSubmatch(lineBytes)
 			if result != nil {
 				quality, err = strconv.Atoi(string(result[1]))
 				if err != nil {
