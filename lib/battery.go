@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	fACOnline    string = "/sys/class/power_supply/AC/online"
-	fFirstBatDir string = "/sys/class/power_supply/BAT0"
+	fACOnline string = "/sys/class/power_supply/AC/online"
+	BatDir    string = "/sys/class/power_supply/BAT0"
 )
 
 // Battery represents system battery information.
@@ -62,6 +62,21 @@ func NewBattery(batDir string) (*Battery, error) {
 
 // Str returns battery info as a string.
 func (b *Battery) Str() string {
+	fmtStr := "🔋  %s%%"
+	if b.charging() {
+		fmtStr = "🔌 %s%%"
+	}
+
+	b.getChargeNow()
+	return fmt.Sprintf(fmtStr, b.getChargePct())
+}
+
+func (b *Battery) Update() error {
+	return nil
+}
+
+// Spark returns battery info as a sparkline.
+func (b *Battery) Spark() string {
 	fmtStr := "🔋  %s%%"
 	if b.charging() {
 		fmtStr = "🔌 %s%%"

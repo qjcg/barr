@@ -6,7 +6,7 @@ import (
 
 const (
 	// Normal mode
-	FmtNormal  = "Mon Jan 2, 3:04pm"
+	FmtNormal  = "Mon Jan 2, 3:04pm MST"
 	FreqNormal = time.Second * 5
 
 	// Test mode (more frequent updates)
