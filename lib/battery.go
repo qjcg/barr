@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	fACOnline string = "/sys/class/power_supply/AC/online"
-	BatDir    string = "/sys/class/power_supply/BAT0"
+	FACOnline = "/sys/class/power_supply/AC/online"
+	BatDir    = "/sys/class/power_supply/BAT0"
 )
 
 // Battery represents system battery information.
@@ -88,12 +88,16 @@ func (b *Battery) Spark() string {
 
 // charging returns true if plugged in.
 func (b *Battery) charging() bool {
-	cByt, err := ioutil.ReadFile(fACOnline)
-	if err != nil {
-		log.Println(err)
+	if _, err := os.Stat(FACOnline); !os.IsNotExist(err) {
+		cByt, err := ioutil.ReadFile(FACOnline)
+		if err != nil {
+			log.Println(err)
+			return false
+		}
+		// "0": false, "1": true
+		return cByt[0] == '1'
 	}
-	// "0": false, "1": true
-	return cByt[0] == '1'
+	return false
 }
 
 // getChargeNow updates b.ChargeNow with the latest value.

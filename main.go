@@ -21,7 +21,7 @@ func main() {
 
 	// append to BarStringers all we want to compose together as output
 	var bstrs []BarStringer
-	bstrs = append(bstrs, &barr.Battery{})
+	//bstrs = append(bstrs, &barr.Battery{})
 	bstrs = append(bstrs, &barr.LoadAvg{})
 
 	if *wifiIface != "" {

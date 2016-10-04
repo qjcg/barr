@@ -1,3 +1,7 @@
+// +build integration
+
+// NOTE: Tests in this file require that a battery be present on
+// the test system to work (hence the "integration" build tag).
 package barr
 
 import (
@@ -9,16 +13,14 @@ func TestNewBattery(t *testing.T) {
 		dir                   string
 		chargeNow, chargeFull float64
 	}{
-		{"/sys/class/power_supply/BAT0"},
 		{"/sys/class/power_supply/BAT0", 0.0, 0.0},
 		{"/sys/class/power_supply/BAT0", 1.0, 2.0},
 	}
 
 	for _, s := range testdata {
-		d := NewBattery(s.dir)
-		_, ok := d.(*Battery)
-		if !ok {
-			t.Error("expected: *Battery type")
+		d, err := NewBattery(s.dir)
+		if err != nil {
+			t.Error(d, err)
 		}
 	}
 }

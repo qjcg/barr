@@ -6,9 +6,9 @@ import (
 )
 
 func TestLoadAvg(t *testing.T) {
-	actual := LoadAvg()
-	m, _ := regexp.MatchString("([0-9]+.[0-9]{2} ?){3}", actual)
-	if !m {
-		t.Fatalf("actual output does not match regexp: %s", actual)
+	var la LoadAvg
+	la.Update()
+	if m, _ := regexp.MatchString("([0-9]+.[0-9]{2} ?){3}", la.Str()); !m {
+		t.Fatalf("actual output does not match regexp: %s", la.Str())
 	}
 }
