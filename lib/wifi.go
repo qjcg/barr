@@ -37,7 +37,7 @@ func (w *WifiData) String() string {
 	if w.ESSID == "" || w.Quality == 0 {
 		return ""
 	}
-	return fmt.Sprintf("%s:%.0f%%", w.ESSID, float64(w.Quality)/70*100)
+	return fmt.Sprintf("%s %s:%.0f%%", `📶`, w.ESSID, float64(w.Quality)/70*100)
 }
 
 // getConnection updates the w.Interface and w.ESSID values based on the output
