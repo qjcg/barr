@@ -4,6 +4,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os/exec"
 	"strings"
 	"time"
@@ -12,48 +13,67 @@ import (
 )
 
 func main() {
-	//batdir := flag.String("b", barr.BatDir, "base directory for battery info")
-	freq := flag.Duration("f", barr.FreqNormal, "update frequency")
+	freq := flag.Duration("f", time.Second*5, "update frequency")
 	ofs := flag.String("s", "  ", "output field separator")
-	wifiIface := flag.String("w", "", "wifi card interface name")
 	testMode := flag.Bool("t", false, "test mode")
 	flag.Parse()
 
-	// append to BarStringers all we want to compose together as output
-	var bstrs []BarStringer
-	//bstrs = append(bstrs, &barr.Battery{})
-	bstrs = append(bstrs, &barr.LoadAvg{})
+	// Append to Stringers all we want to compose together as output
+	var stringers []fmt.Stringer
 
-	if *wifiIface != "" {
-		bstrs = append(bstrs, &barr.WifiData{Ifname: *wifiIface})
+	// Wifi.
+	var wd barr.WifiData
+	stringers = append(stringers, &wd)
+
+	// Battery.
+	bat, err := barr.NewBattery(barr.BatDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	stringers = append(stringers, bat)
+
+	// Load average.
+	stringers = append(stringers, &barr.LoadAvg{})
+
+	// Timestamp.
+	var ts barr.TimeStamp
+	ts = barr.DefaultTimeStamp
+	if *testMode {
+		ts = barr.TestTimeStamp
 	}
 
+	stringers = append(stringers, ts)
+
+	// Set ticker frequency.
+	ticker := time.NewTicker(*freq)
 	if *testMode {
-		*freq = barr.FreqTest
-		//tsfmt = "Mon Jan 2, 3:04:05.000pm"
+		ticker = time.NewTicker(time.Millisecond)
 	}
 
 	var output string
-	ticker := time.NewTicker(*freq)
 	for range ticker.C {
-		output = Get(*ofs, bstrs)
+		output = Get(*ofs, stringers)
 
 		if *testMode {
 			fmt.Printf("\r%s ", output)
-		} else {
-			_ = exec.Command("xsetroot", "-name", output).Run()
+			continue
+		}
+
+		err := exec.Command("xsetroot", "-name", output).Run()
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 }
 
-// Get returns a status string from an OFS and list of BarStringers.
-func Get(ofs string, bs []BarStringer) string {
+// Get returns a status string from an OFS and list of fmt.Stringer interface
+// values.
+func Get(ofs string, bs []fmt.Stringer) string {
 	var data []string
 	var output string
 
 	for _, b := range bs {
-		b.Update()
-		data = append(data, b.Str())
+		data = append(data, b.String())
 	}
 
 	output = strings.Join(data, ofs)

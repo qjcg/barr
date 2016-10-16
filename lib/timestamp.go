@@ -4,28 +4,24 @@ import (
 	"time"
 )
 
-const (
-	// Normal mode
-	FmtNormal  = "Mon Jan 2, 3:04pm MST"
-	FreqNormal = time.Second * 5
+type TimeStamp struct {
+	Fmt string
+	time.Time
+}
 
-	// Test mode (more frequent updates)
-	FmtTest  = "Mon Jan 2, 3:04:05.000pm"
-	FreqTest = time.Millisecond
+var (
+	// Normal mode.
+	DefaultTimeStamp = TimeStamp{
+		Fmt: "Mon Jan 2, 3:04pm MST",
+	}
+
+	// Test mode (more frequent updates).
+	TestTimeStamp = TimeStamp{
+		Fmt: "Mon Jan 2, 3:04:05.000pm",
+	}
 )
 
-type TimeStamp struct {
-	Fmt  string
-	Freq time.Duration
-	Time time.Time
-}
-
-// Implement the BarStringer interface.
-func (ts *TimeStamp) Str() string {
-	return ts.Time.Format(ts.Fmt)
-}
-
-// Implement the BarStringer interface.
-func (ts *TimeStamp) Update() error {
-	return nil
+// Implement the fmt.Stringer interface.
+func (ts TimeStamp) String() string {
+	return time.Now().Format(ts.Fmt)
 }

@@ -22,23 +22,54 @@ type WifiData struct {
 	Quality int
 }
 
-func getESSID() (string, error) {
-	cmd := exec.Command("iwgetid", "--raw")
-	cmdOut, err := cmd.Output()
+// Implement the fmt.Stringer interface.
+func (w *WifiData) String() string {
+	err := w.getConnection()
 	if err != nil {
-		return "", err
+		return ""
 	}
 
-	essid := strings.Trim(string(cmdOut), "\n")
-	return essid, nil
+	err = w.getQuality()
+	if err != nil {
+		return ""
+	}
+
+	if w.ESSID == "" || w.Quality == 0 {
+		return ""
+	}
+	return fmt.Sprintf("%s:%.0f%%", w.ESSID, float64(w.Quality)/70*100)
 }
 
-func getQuality(ifname string) (int, error) {
-	file, _ := os.Open(wifiDataFile)
+// getConnection updates the w.Interface and w.ESSID values based on the output
+// of the "iwgetid" command.
+func (w *WifiData) getConnection() error {
+	out, err := exec.Command("iwgetid").Output()
+	if e, ok := err.(*exec.ExitError); ok {
+		return e
+	}
+
+	if err != nil {
+		return err
+	}
+
+	data := strings.Split(string(out), `ESSID:"`)
+
+	w.Ifname = strings.TrimSpace(data[0])
+	data[1] = strings.TrimSpace(data[1])
+	w.ESSID = strings.Trim(data[1], `"`)
+
+	return nil
+}
+
+func (w *WifiData) getQuality() error {
+	file, err := os.Open(wifiDataFile)
+	if err != nil {
+		return err
+	}
+
 	fscanner := bufio.NewScanner(file)
 
-	var line, quality int
-
+	var line int
 	for fscanner.Scan() {
 		// skip initial header lines
 		if line++; line < 3 {
@@ -47,41 +78,19 @@ func getQuality(ifname string) (int, error) {
 		lineBytes := fscanner.Bytes()
 
 		// only interested in lines containing "ifname"
-		m, err := regexp.Match(ifname, lineBytes)
-		if m {
-			result := wifiQuality.FindSubmatch(lineBytes)
-			if result != nil {
-				quality, err = strconv.Atoi(string(result[1]))
-				if err != nil {
-					return quality, err
-				}
+		m, err := regexp.Match(w.Ifname, lineBytes)
+		if !m {
+			return nil
+		}
+
+		result := wifiQuality.FindSubmatch(lineBytes)
+		if result != nil {
+			w.Quality, err = strconv.Atoi(string(result[1]))
+			if err != nil {
+				return err
 			}
 		}
 	}
 
-	return quality, nil
-}
-
-// Implement the BarStringer interface.
-func (w *WifiData) Update() error {
-	var err error
-	w.ESSID, err = getESSID()
-	if err != nil {
-		return err
-	}
-
-	w.Quality, err = getQuality(w.Ifname)
-	if err != nil {
-		return err
-	}
-
 	return nil
-}
-
-// Implement the BarStringer interface.
-func (w *WifiData) Str() string {
-	if w.ESSID == "" || w.Quality == 0 {
-		return ""
-	}
-	return fmt.Sprintf("%s:%.0f%%", w.ESSID, float64(w.Quality)/70*100)
 }

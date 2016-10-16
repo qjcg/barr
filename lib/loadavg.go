@@ -16,20 +16,16 @@ type LoadAvg struct {
 	load15 float64
 }
 
-func (la *LoadAvg) Update() error {
+func (la *LoadAvg) String() string {
 	si := new(syscall.Sysinfo_t)
 	err := syscall.Sysinfo(si)
 	if err != nil {
 		log.Println("couldn't get sysinfo:", err)
-		return err
+		return ""
 	}
 
 	la.load1 = float64(si.Loads[0]) / scale
 	la.load5 = float64(si.Loads[1]) / scale
 	la.load15 = float64(si.Loads[2]) / scale
-	return nil
-}
-
-func (la *LoadAvg) Str() string {
 	return fmt.Sprintf("%.2f %.2f %.2f", la.load1, la.load5, la.load15)
 }

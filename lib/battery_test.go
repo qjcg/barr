@@ -25,11 +25,11 @@ func TestNewBattery(t *testing.T) {
 	}
 }
 
-func TestStr(t *testing.T) {
+func TestBatteryString(t *testing.T) {
 	b := &Battery{
 		Dir: "/sys/class/power_supply/BAT0",
 	}
-	if b.Str() == "" {
-		t.Error("battery Str() method returns empty string")
+	if b.String() == "" {
+		t.Error("battery String() method returns empty string")
 	}
 }

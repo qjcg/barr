@@ -29,7 +29,7 @@ type Battery struct {
 // NewBattery returns a *Battery based on input batDir.
 func NewBattery(batDir string) (*Battery, error) {
 	// return early if batDir doesn't exist
-	if _, err := os.Stat(batDir); os.IsNotExist(err) {
+	if _, err := os.Lstat(batDir); os.IsNotExist(err) {
 		return nil, err
 	}
 
@@ -47,7 +47,7 @@ func NewBattery(batDir string) (*Battery, error) {
 	// Get ChargeFull
 	cBytes, err := ioutil.ReadFile(fChargeFull)
 	check(err)
-	chargeFullStr := strings.Trim(string(cBytes), "\n")
+	chargeFullStr := strings.TrimSpace(string(cBytes))
 	chargeFullFloat, err := strconv.ParseFloat(chargeFullStr, 64)
 	check(err)
 
@@ -61,7 +61,7 @@ func NewBattery(batDir string) (*Battery, error) {
 }
 
 // Str returns battery info as a string.
-func (b *Battery) Str() string {
+func (b *Battery) String() string {
 	fmtStr := "🔋  %s%%"
 	if b.charging() {
 		fmtStr = "🔌 %s%%"
@@ -69,10 +69,6 @@ func (b *Battery) Str() string {
 
 	b.getChargeNow()
 	return fmt.Sprintf(fmtStr, b.getChargePct())
-}
-
-func (b *Battery) Update() error {
-	return nil
 }
 
 // Spark returns battery info as a sparkline.
@@ -88,16 +84,17 @@ func (b *Battery) Spark() string {
 
 // charging returns true if plugged in.
 func (b *Battery) charging() bool {
-	if _, err := os.Stat(FACOnline); !os.IsNotExist(err) {
-		cByt, err := ioutil.ReadFile(FACOnline)
-		if err != nil {
-			log.Println(err)
-			return false
-		}
-		// "0": false, "1": true
-		return cByt[0] == '1'
+	if _, err := os.Stat(FACOnline); os.IsNotExist(err) {
+		return false
 	}
-	return false
+
+	cByt, err := ioutil.ReadFile(FACOnline)
+	if err != nil {
+		log.Println(err)
+		return false
+	}
+	// "0": false, "1": true
+	return cByt[0] == '1'
 }
 
 // getChargeNow updates b.ChargeNow with the latest value.
