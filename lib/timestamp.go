@@ -17,7 +17,7 @@ var (
 
 	// Test mode (more frequent updates).
 	TestTimeStamp = TimeStamp{
-		Fmt: "Mon Jan 2, 3:04:05.000pm",
+		Fmt: "Mon Jan 2, 3:04:05.000pm MST",
 	}
 )
 
