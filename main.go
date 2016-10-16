@@ -18,7 +18,8 @@ func main() {
 	testMode := flag.Bool("t", false, "test mode")
 	flag.Parse()
 
-	// Append to Stringers all we want to compose together as output
+	// We will append to stringers all fmt.Stringers we want to compose
+	// together to produce our final status string.
 	var stringers []fmt.Stringer
 
 	// Wifi.
@@ -36,12 +37,10 @@ func main() {
 	stringers = append(stringers, &barr.LoadAvg{})
 
 	// Timestamp.
-	var ts barr.TimeStamp
-	ts = barr.DefaultTimeStamp
+	ts := barr.DefaultTimeStamp
 	if *testMode {
 		ts = barr.TestTimeStamp
 	}
-
 	stringers = append(stringers, ts)
 
 	// Set ticker frequency.
@@ -50,6 +49,7 @@ func main() {
 		ticker = time.NewTicker(time.Millisecond)
 	}
 
+	// Loop and update
 	var output string
 	for range ticker.C {
 		output = Get(*ofs, stringers)
