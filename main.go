@@ -46,7 +46,7 @@ func main() {
 	// Set ticker frequency.
 	ticker := time.NewTicker(*freq)
 	if *testMode {
-		ticker = time.NewTicker(time.Millisecond)
+		ticker = time.NewTicker(time.Second)
 	}
 
 	// Loop and update
