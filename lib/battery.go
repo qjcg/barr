@@ -62,13 +62,13 @@ func NewBattery(batDir string) (*Battery, error) {
 
 // Str returns battery info as a string.
 func (b *Battery) String() string {
-	fmtStr := "🔋  %s%%"
+	symbol := "🔋"
 	if b.charging() {
-		fmtStr = "🔌 %s%%"
+		symbol = "🔌"
 	}
 
 	b.getChargeNow()
-	return fmt.Sprintf(fmtStr, b.getChargePct())
+	return fmt.Sprintf("%s %s%%", symbol, b.getChargePct())
 }
 
 // Spark returns battery info as a sparkline.
