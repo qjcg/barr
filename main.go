@@ -28,10 +28,9 @@ func main() {
 
 	// Battery.
 	bat, err := barr.NewBattery(barr.BatDir)
-	if err != nil {
-		log.Fatal(err)
+	if err == nil {
+		stringers = append(stringers, bat)
 	}
-	stringers = append(stringers, bat)
 
 	// Load average.
 	stringers = append(stringers, &barr.LoadAvg{})
