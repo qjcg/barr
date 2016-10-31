@@ -48,7 +48,7 @@ func main() {
 		ticker = time.NewTicker(time.Second)
 	}
 
-	// Loop and update
+	// Loop and update.
 	var output string
 	for range ticker.C {
 		output = Get(*ofs, stringers)
