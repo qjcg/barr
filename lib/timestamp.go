@@ -21,7 +21,7 @@ var (
 	}
 )
 
-// Implement the fmt.Stringer interface.
+// String implements the fmt.Stringer interface.
 func (ts TimeStamp) String() string {
 	return time.Now().Format(ts.Fmt)
 }

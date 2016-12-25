@@ -28,17 +28,21 @@ type Battery struct {
 
 // NewBattery returns a *Battery based on input batDir.
 func NewBattery(batDir string) (*Battery, error) {
-	// return early if batDir doesn't exist
+
+	// Return early if batDir doesn't exist.
 	if _, err := os.Lstat(batDir); os.IsNotExist(err) {
 		return nil, err
 	}
 
 	fChargeFull := fmt.Sprintf("%s/%s", batDir, "charge_full")
-	// Sometimes file prefix changes, ex sometimes is "charge_full", sometimes "energy_full".
+
+	// Sometimes file prefix changes, ex sometimes is "charge_full",
+	// sometimes "energy_full".
 	if _, err := os.Stat(fChargeFull); os.IsNotExist(err) {
 		fChargeFull = strings.Replace(fChargeFull, "charge", "energy", -1)
 
-		// If we still can't find the file after substituting the "energy" prefix, return
+		// Return if we still can't find the file after substituting the
+		// "energy" prefix.
 		if _, err := os.Stat(fChargeFull); os.IsNotExist(err) {
 			return nil, err
 		}

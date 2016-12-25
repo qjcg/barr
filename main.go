@@ -59,6 +59,7 @@ func main() {
 			continue
 		}
 
+		// Setting X root window title sets dwm status string.
 		err := exec.Command("xsetroot", "-name", output).Run()
 		if err != nil {
 			log.Fatal(err)
