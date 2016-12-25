@@ -10,8 +10,6 @@ import (
 	"strings"
 )
 
-const wifiDataFile = "/proc/net/wireless"
-
 var (
 	wifiQuality = regexp.MustCompile(`\w:\s+\d+\s+(\d+)\.`)
 )
@@ -62,7 +60,7 @@ func (w *WifiData) getConnection() error {
 }
 
 func (w *WifiData) getQuality() error {
-	file, err := os.Open(wifiDataFile)
+	file, err := os.Open("/proc/net/wireless")
 	if err != nil {
 		return err
 	}
