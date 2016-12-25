@@ -33,7 +33,8 @@ func main() {
 	}
 
 	// Load average.
-	stringers = append(stringers, &barr.LoadAvg{})
+	var loadavg barr.LoadAvg
+	stringers = append(stringers, &loadavg)
 
 	// Timestamp.
 	ts := barr.DefaultTimeStamp
@@ -67,12 +68,12 @@ func main() {
 
 // Get returns a status string from an OFS and list of fmt.Stringer interface
 // values.
-func Get(ofs string, bs []fmt.Stringer) string {
+func Get(ofs string, stringers []fmt.Stringer) string {
 	var data []string
 	var output string
 
-	for _, b := range bs {
-		data = append(data, b.String())
+	for _, s := range stringers {
+		data = append(data, s.String())
 	}
 
 	output = strings.Join(data, ofs)
