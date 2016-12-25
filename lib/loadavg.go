@@ -6,16 +6,17 @@ import (
 	"syscall"
 )
 
-// see https://github.com/capnm/sysinfo/blob/master/sysinfo.go
+// See https://github.com/capnm/sysinfo/blob/master/sysinfo.go
 const scale = 65536.0
 
-// A LoadAvg represents the system load average (1, 5, and 15 minutes).
+// LoadAvg represents the system load average (1, 5, and 15 minutes).
 type LoadAvg struct {
 	load1  float64
 	load5  float64
 	load15 float64
 }
 
+// String implements the fmt.Stringer interface.
 func (la *LoadAvg) String() string {
 	si := new(syscall.Sysinfo_t)
 	err := syscall.Sysinfo(si)
