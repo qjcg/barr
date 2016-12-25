@@ -50,10 +50,14 @@ func NewBattery(batDir string) (*Battery, error) {
 
 	// Get ChargeFull
 	cBytes, err := ioutil.ReadFile(fChargeFull)
-	check(err)
+	if err != nil {
+		return nil, err
+	}
 	chargeFullStr := strings.TrimSpace(string(cBytes))
 	chargeFullFloat, err := strconv.ParseFloat(chargeFullStr, 64)
-	check(err)
+	if err != nil {
+		return nil, err
+	}
 
 	return &Battery{
 		Dir:         batDir,
@@ -82,7 +86,10 @@ func (b *Battery) Spark() string {
 		fmtStr = "🔌 %s%%"
 	}
 
-	b.getChargeNow()
+	err := b.getChargeNow()
+	if err != nil {
+		return err.Error()
+	}
 	return fmt.Sprintf(fmtStr, b.getChargePct())
 }
 
@@ -102,22 +109,21 @@ func (b *Battery) charging() bool {
 }
 
 // getChargeNow updates b.ChargeNow with the latest value.
-func (b *Battery) getChargeNow() {
+func (b *Battery) getChargeNow() error {
 	cBytes, err := ioutil.ReadFile(b.FChargeNow)
-	check(err)
+	if err != nil {
+		return err
+	}
 	cStr := strings.Trim(string(cBytes), "\n")
 	b.ChargeNow, err = strconv.ParseFloat(cStr, 64)
-	check(err)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // getChargePct returns the charge percent as a string
 func (b *Battery) getChargePct() string {
 	chargePct := b.ChargeNow / b.ChargeFull * 100.0
 	return strconv.FormatFloat(chargePct, 'f', 0, 64)
-}
-
-func check(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
 }
