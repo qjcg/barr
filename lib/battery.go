@@ -1,17 +1,18 @@
 package barr
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
 
 const (
-	FACOnline = "/sys/class/power_supply/AC/online"
-	BatDir    = "/sys/class/power_supply/BAT0"
+	BatDir = "/sys/class/power_supply/BAT0"
 )
 
 // Battery represents system battery information.
@@ -71,7 +72,7 @@ func NewBattery(batDir string) (*Battery, error) {
 // Str returns battery info as a string.
 func (b *Battery) String() string {
 	symbol := "🔋"
-	if b.charging() {
+	if Charging() {
 		symbol = "🔌"
 	}
 
@@ -82,7 +83,7 @@ func (b *Battery) String() string {
 // Spark returns battery info as a sparkline.
 func (b *Battery) Spark() string {
 	fmtStr := "🔋  %s%%"
-	if b.charging() {
+	if Charging() {
 		fmtStr = "🔌 %s%%"
 	}
 
@@ -93,19 +94,35 @@ func (b *Battery) Spark() string {
 	return fmt.Sprintf(fmtStr, b.getChargePct())
 }
 
-// charging returns true if plugged in.
-func (b *Battery) charging() bool {
-	if _, err := os.Stat(FACOnline); os.IsNotExist(err) {
+// Charging returns true if AC power plugged in.
+func Charging() bool {
+	f := "/sys/class/power_supply/AC/online"
+
+	if _, err := os.Stat(f); os.IsNotExist(err) {
 		return false
 	}
 
-	cByt, err := ioutil.ReadFile(FACOnline)
+	cByt, err := ioutil.ReadFile(f)
 	if err != nil {
 		log.Println(err)
 		return false
 	}
 	// "0": false, "1": true
 	return cByt[0] == '1'
+}
+
+// Charge returns the percentage charge remaining accross all batteries.
+func Charge() int {
+	var caps []int
+	matches, err := filepath.Glob("/sys/class/power_supply/BAT*/capacity")
+
+	for i, m := range matches {
+		buf, err := ioutil.ReadFile(m)
+		if err != nil {
+		}
+
+		bytes.Atoi()
+	}
 }
 
 // getChargeNow updates b.ChargeNow with the latest value.
