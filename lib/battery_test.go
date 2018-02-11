@@ -33,3 +33,6 @@ func TestBatteryString(t *testing.T) {
 		t.Error("battery String() method returns empty string")
 	}
 }
+
+func TestCapacity(t *testing.T) {
+}

@@ -5,7 +5,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -27,10 +29,25 @@ func main() {
 	stringers = append(stringers, &wd)
 
 	// Battery.
-	bat, err := barr.NewBattery(barr.BatDir)
-	if err == nil {
-		stringers = append(stringers, bat)
+	// We get live battery capacities from sysfs.
+	var bat barr.Battery
+
+	matches, err := filepath.Glob("/sys/class/power_supply/BAT*/capacity")
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	for _, m := range matches {
+		f, err := os.Open(m)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		bat.Sources = append(bat.Sources, f)
+	}
+
+	stringers = append(stringers, &bat)
 
 	// Load average.
 	var loadavg barr.LoadAvg
