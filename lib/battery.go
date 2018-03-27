@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gonum/stat"
+	"gonum.org/v1/gonum/stat"
 )
 
 // FIXME: Generalize to use *io.Reader instead of *os.File to improve
