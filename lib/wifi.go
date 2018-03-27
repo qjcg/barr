@@ -20,7 +20,7 @@ type WifiData struct {
 	Quality int
 }
 
-// Implement the fmt.Stringer interface.
+// String implements the fmt.Stringer interface.
 func (w *WifiData) String() string {
 	err := w.getConnection()
 	if err != nil {
@@ -64,21 +64,23 @@ func (w *WifiData) getQuality() error {
 	if err != nil {
 		return err
 	}
+	defer file.Close()
 
 	fscanner := bufio.NewScanner(file)
 
 	var line int
 	for fscanner.Scan() {
-		// skip initial header lines
+
+		// Skip initial header lines.
 		if line++; line < 3 {
 			continue
 		}
 		lineBytes := fscanner.Bytes()
 
-		// only interested in lines containing "ifname"
+		// Only interested in lines containing "ifname".
 		m, err := regexp.Match(w.Ifname, lineBytes)
 		if !m {
-			return nil
+			continue
 		}
 
 		result := wifiQuality.FindSubmatch(lineBytes)

@@ -14,11 +14,19 @@ import (
 	barr "github.com/qjcg/barr/lib"
 )
 
+var Version string
+
 func main() {
 	freq := flag.Duration("f", time.Second*5, "update frequency")
 	ofs := flag.String("s", "  ", "output field separator")
 	testMode := flag.Bool("t", false, "test mode")
+	version := flag.Bool("v", false, "print version")
 	flag.Parse()
+
+	if *version {
+		fmt.Println(Version)
+		os.Exit(0)
+	}
 
 	// We will append to stringers all fmt.Stringers we want to compose
 	// together to produce our final status string.

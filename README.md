@@ -2,7 +2,8 @@ The barr command prints out a status line for use with dwm(1).
 
 # Dependencies
 
-- `xsetroot` (package is `xort-xsetroot` in Arch)
+- `xsetroot` (arch package: `xort-xsetroot`)
+- `iwgetid` for the wifi module (arch package: `wireless_tools`)
 
 
 # Usage
