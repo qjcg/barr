@@ -14,8 +14,6 @@ import (
 	barr "github.com/qjcg/barr/lib"
 )
 
-var Version string
-
 func main() {
 	freq := flag.Duration("f", time.Second*5, "update frequency")
 	ofs := flag.String("s", "  ", "output field separator")
