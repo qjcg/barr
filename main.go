@@ -1,5 +1,5 @@
 // The barr command prints out a status line (e.g. for use with dwm(1)).
-package main
+package main // import "github.com/qjcg/barr"
 
 import (
 	"flag"
@@ -72,18 +72,17 @@ func main() {
 		ticker = time.NewTicker(time.Second)
 	}
 
+	// Run Get/update once before ticker starts.
+	output := Get(*ofs, stringers)
+	err = update(output, *testMode)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Loop and update.
-	var output string
 	for range ticker.C {
 		output = Get(*ofs, stringers)
-
-		if *testMode {
-			fmt.Printf("\r%s ", output)
-			continue
-		}
-
-		// Setting X root window title sets dwm status string.
-		err := exec.Command("xsetroot", "-name", output).Run()
+		err := update(output, *testMode)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -104,4 +103,16 @@ func Get(ofs string, stringers []fmt.Stringer) string {
 	output = strings.Trim(output, " ")
 
 	return output
+}
+
+// update sends the output string to stdout (test mode) or the X root window
+// title.
+func update(output string, testMode bool) error {
+	if testMode {
+		fmt.Printf("\r%s ", output)
+		return nil
+	}
+
+	// Setting X root window title sets dwm status string.
+	return exec.Command("xsetroot", "-name", output).Run()
 }
