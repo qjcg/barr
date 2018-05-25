@@ -69,14 +69,14 @@ func main() {
 	// Set ticker frequency.
 	ticker := time.NewTicker(*freq)
 	if *testMode {
-		ticker = time.NewTicker(time.Second)
+		ticker = time.NewTicker(time.Second / 2)
 	}
 
-	// Run Get/update once before ticker starts.
+	// First Get/update (so we have output once BEFORE ticker delay).
 	output := Get(*ofs, stringers)
 	err = update(output, *testMode)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Update error (pre-loop):", err)
 	}
 
 	// Loop and update.
@@ -84,7 +84,7 @@ func main() {
 		output = Get(*ofs, stringers)
 		err := update(output, *testMode)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Update error (in-loop):", err)
 		}
 	}
 }
@@ -114,5 +114,5 @@ func update(output string, testMode bool) error {
 	}
 
 	// Setting X root window title sets dwm status string.
-	return exec.Command("xsetroot", "-name", output).Run()
+	return exec.Command("/usr/bin/xsetroot", "-name", output).Run()
 }
