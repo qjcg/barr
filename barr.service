@@ -3,4 +3,4 @@ Description=A statusbar for dwm(1)
 PartOf=graphical-session.target
 
 [Service]
-ExecStart=/usr/bin/barr
+ExecStart=/usr/bin/barr -x

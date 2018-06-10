@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -23,12 +24,15 @@ type Battery struct {
 
 // Str returns battery info as a string.
 func (b *Battery) String() string {
-	symbol := "🔋"
+	symbol := ""
 	if Charging() {
-		symbol = "🔌"
+		symbol = "AC"
 	}
 
-	return fmt.Sprintf("%s %s%%", symbol, strconv.FormatFloat(b.Capacity(), 'f', 0, 64))
+	return fmt.Sprintf("%s %s%%",
+		symbol,
+		strconv.FormatFloat(b.Capacity(), 'f', 0, 64),
+	)
 }
 
 // Spark returns battery info as a sparkline.
@@ -39,6 +43,27 @@ func (b *Battery) Spark() string {
 	}
 
 	return fmt.Sprintf(fmtStr, b.Capacity())
+}
+
+func NewBattery() (*Battery, error) {
+	var bat Battery
+
+	matches, err := filepath.Glob("/sys/class/power_supply/BAT*/capacity")
+	if err != nil {
+		return &bat, err
+	}
+
+	for _, m := range matches {
+		f, err := os.Open(m)
+		if err != nil {
+			return &bat, err
+		}
+		//defer f.Close()
+
+		bat.Sources = append(bat.Sources, f)
+	}
+
+	return &bat, nil
 }
 
 // Charging returns true if AC power plugged in.

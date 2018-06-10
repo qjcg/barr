@@ -1,17 +1,22 @@
-The barr command prints out a status line for use with dwm(1).
+The barr command prints out a status line for use with dwm(1) and other
+minimalistic window managers.
 
 # Dependencies
 
-- `xsetroot` (arch package: `xort-xsetroot`)
+- `xsetroot` (arch package: `xorg-xsetroot`)
 - `iwgetid` for the wifi module (arch package: `wireless_tools`)
 
 
 # Usage
 
 ```shell
-# normal mode, uses `xsetroot` to set title for dwm.
+# prints a status line to stdout
 barr
 
-# test mode, prints a line to stdout for testing
-barr -t
+# xsetroot mode, uses `xsetroot` to set title for dwm.
+barr -x
 ```
+
+# License
+
+MIT.
