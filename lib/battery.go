@@ -29,10 +29,14 @@ func (b *Battery) String() string {
 		symbol = "AC"
 	}
 
-	return fmt.Sprintf("%s %s%%",
-		symbol,
-		strconv.FormatFloat(b.Capacity(), 'f', 0, 64),
-	)
+	if len(b.Sources) > 0 {
+		return fmt.Sprintf("%s %s%%",
+			symbol,
+			strconv.FormatFloat(b.Capacity(), 'f', 0, 64))
+	} else {
+		// Return the empty string if we have no sources.
+		return ""
+	}
 }
 
 // Spark returns battery info as a sparkline.
