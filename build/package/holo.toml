@@ -8,14 +8,14 @@ requires = ["wireless_tools", "xorg-xsetroot"]
 
 [[file]]
 path = "/usr/bin/barr"
-contentFrom = "./barr"
+contentFrom = "../../cmd/barr/barr"
 mode = "0755"
 owner = "root"
 group = "root"
 
 [[file]]
 path = "/usr/lib/systemd/user/barr.service"
-contentFrom = "./barr.service"
+contentFrom = "../../init/barr.service"
 mode = "0644"
 owner = "root"
 group = "root"

@@ -9,25 +9,16 @@ import (
 )
 
 func TestNewBattery(t *testing.T) {
-	testdata := []struct {
-		dir                   string
-		chargeNow, chargeFull float64
-	}{
-		{"/sys/class/power_supply/BAT0", 0.0, 0.0},
-		{"/sys/class/power_supply/BAT0", 1.0, 2.0},
-	}
-
-	for _, s := range testdata {
-		d, err := NewBattery(s.dir)
-		if err != nil {
-			t.Error(d, err)
-		}
+	b, err := NewBattery()
+	if err != nil {
+		t.Error(b, err)
 	}
 }
 
 func TestBatteryString(t *testing.T) {
-	b := &Battery{
-		Dir: "/sys/class/power_supply/BAT0",
+	b, err := NewBattery()
+	if err != nil {
+		t.Error(b, err)
 	}
 	if b.String() == "" {
 		t.Error("battery String() method returns empty string")

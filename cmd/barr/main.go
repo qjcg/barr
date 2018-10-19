@@ -1,5 +1,5 @@
 // The barr command prints out a status line for use with minimalistic window managers.
-package main // import "github.com/qjcg/barr"
+package main
 
 import (
 	"flag"
@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	barr "github.com/qjcg/barr/lib"
+	sysinfo "github.com/qjcg/barr/pkg/sysinfo"
 )
 
 // StatusBar describes a statusbar.
@@ -29,8 +29,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Create a new *barr.Battery.
-	bat, err := barr.NewBattery()
+	// Create a new *sysinfo.Battery.
+	bat, err := sysinfo.NewBattery()
 	if err != nil {
 		log.Fatal("Error getting battery information:", err)
 	}
@@ -38,10 +38,10 @@ func main() {
 	// Create a new StatusBar.
 	sb := StatusBar{
 		Stringers: []fmt.Stringer{
-			&barr.WifiData{},
+			&sysinfo.WifiData{},
 			bat,
-			&barr.LoadAvg{},
-			&barr.DefaultTimeStamp,
+			&sysinfo.LoadAvg{},
+			&sysinfo.DefaultTimeStamp,
 		},
 	}
 
