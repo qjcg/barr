@@ -1,6 +1,6 @@
 [package]
 name = "barr"
-version = "1.9.0"
+version = "1.10.0"
 author = "John Gosset <john@gossetx.com>"
 description = "A statusbar generator for dwm(1)"
 architecture = "x86_64"
@@ -8,7 +8,7 @@ requires = ["wireless_tools", "xorg-xsetroot"]
 
 [[file]]
 path = "/usr/bin/barr"
-contentFrom = "../../cmd/barr/barr"
+contentFrom = "../../barr"
 mode = "0755"
 owner = "root"
 group = "root"
