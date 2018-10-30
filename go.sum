@@ -1,13 +1,4 @@
 golang.org/x/exp v0.0.0-20180321215751-8460e604b9de/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
-<<<<<<< HEAD
-golang.org/x/exp v0.0.0-20181011123434-d8bb7a16721e h1:zdkKJYGX6U2WGPgeMiYP6Sn3okzsC0NTea9C0+wou8o=
-golang.org/x/exp v0.0.0-20181011123434-d8bb7a16721e/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
-golang.org/x/tools v0.0.0-20180525024113-a5b4c53f6e8b/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
-gonum.org/v1/gonum v0.0.0-20181017130424-4c3d8206805c h1:d95cUzTUV6w+XVqfxIr/EyaPdDUW569t0SYM+Bmvxao=
-gonum.org/v1/gonum v0.0.0-20181017130424-4c3d8206805c/go.mod h1:Y+Yx5eoAFn32cQvJDxZx5Dpnq+c3wtXuadVZAcxbbBo=
-gonum.org/v1/netlib v0.0.0-20181018051557-57e1e4db57a7 h1:biGE8p3sxXv+JdArdlsXEJZBPPFk51mQHVwOv6h1gnY=
-gonum.org/v1/netlib v0.0.0-20181018051557-57e1e4db57a7/go.mod h1:wa6Ws7BG/ESfp6dHfk7C6KdzKA7wR7u/rKwOGE66zvw=
-=======
 golang.org/x/exp v0.0.0-20181022080537-42ba7d4b6eb2 h1:lpkPb6P4ObnPRN3VbEzv/6CUtwaEDtx0cvCg4eWQuBk=
 golang.org/x/exp v0.0.0-20181022080537-42ba7d4b6eb2/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/tools v0.0.0-20180525024113-a5b4c53f6e8b/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
@@ -15,4 +6,3 @@ gonum.org/v1/gonum v0.0.0-20181029232933-400065bf7646 h1:P1EVWJP/s4XiEpDOMMS9Rhs
 gonum.org/v1/gonum v0.0.0-20181029232933-400065bf7646/go.mod h1:Y+Yx5eoAFn32cQvJDxZx5Dpnq+c3wtXuadVZAcxbbBo=
 gonum.org/v1/netlib v0.0.0-20181029234149-ec6d1f5cefe6 h1:4WsZyVtkthqrHTbDCJfiTs8IWNYE4uvsSDgaV6xpp+o=
 gonum.org/v1/netlib v0.0.0-20181029234149-ec6d1f5cefe6/go.mod h1:wa6Ws7BG/ESfp6dHfk7C6KdzKA7wR7u/rKwOGE66zvw=
->>>>>>> Update deps
