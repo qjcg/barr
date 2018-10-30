@@ -2,6 +2,7 @@ package barr
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -38,23 +39,32 @@ func (w *WifiData) String() string {
 	return fmt.Sprintf("%s:%.0f%%", w.ESSID, float64(w.Quality)/70*100)
 }
 
-// getConnection updates the w.Interface and w.ESSID values based on the output
-// of the "iwgetid" command.
+// getConnection updates the w.Ifname and w.ESSID values based on the output
+// of the "iw dev" command.
+// NOTE: "iw" help output says: "Do NOT screenscrape this tool, we don't
+// consider its output stable." Until a better solution comes along, we'll
+// screenscrape it anyway!
 func (w *WifiData) getConnection() error {
-	out, err := exec.Command("iwgetid").Output()
+	out, err := exec.Command("iw", "dev").Output()
 	if e, ok := err.(*exec.ExitError); ok {
 		return e
 	}
-
 	if err != nil {
 		return err
 	}
-
-	data := strings.Split(string(out), `ESSID:"`)
-
-	w.Ifname = strings.TrimSpace(data[0])
-	data[1] = strings.TrimSpace(data[1])
-	w.ESSID = strings.Trim(data[1], `"`)
+	r := bytes.NewReader(out)
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.Contains(line, "Interface") {
+			w.Ifname = strings.Fields(line)[1]
+		} else if strings.Contains(line, "ssid") {
+			w.ESSID = strings.Fields(line)[1]
+		}
+	}
+	if err = scanner.Err(); err != nil {
+		return err
+	}
 
 	return nil
 }
