@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"os/signal"
 	"strings"
 	"time"
 
@@ -46,6 +47,16 @@ func main() {
 	}
 
 	if *xSetRootMode {
+
+		// Clear screen and exit when interrupt signal received.
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt, os.Kill)
+		go func() {
+			for range c {
+				exec.Command("/usr/bin/xsetroot", "-name", "barr stopped").Run()
+				os.Exit(0)
+			}
+		}()
 
 		// Print once right away.
 		err := sb.UpdateXRootWindowTitle()
