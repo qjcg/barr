@@ -1,4 +1,4 @@
-package barr
+package sysinfo
 
 import (
 	"time"
