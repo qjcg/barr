@@ -4,7 +4,7 @@ minimalistic window managers.
 # Dependencies
 
 - `xsetroot` (arch package: `xorg-xsetroot`)
-- `iwgetid` for the wifi module (arch package: `wireless_tools`)
+- `iw` for the wifi module (arch package: `iw`)
 
 
 # Usage
