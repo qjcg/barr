@@ -1,6 +1,8 @@
 [Unit]
 Description=A statusbar for dwm(1)
-PartOf=graphical-session.target
 
 [Service]
 ExecStart=/usr/bin/barr -x
+
+[Install]
+WantedBy=dwm-session.target
