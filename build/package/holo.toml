@@ -1,10 +1,10 @@
 [package]
 name = "barr"
-version = "1.10.0"
+version = "1.11.0"
 author = "John Gosset <john@gossetx.com>"
 description = "A statusbar generator for dwm(1)"
 architecture = "x86_64"
-requires = ["wireless_tools", "xorg-xsetroot"]
+requires = ["iw", "xorg-xsetroot"]
 
 [[file]]
 path = "/usr/bin/barr"
