@@ -59,7 +59,7 @@ func (w *WifiData) getConnection() error {
 		if strings.Contains(line, "Interface") {
 			w.Ifname = strings.Fields(line)[1]
 		} else if strings.Contains(line, "ssid") {
-			w.ESSID = strings.Fields(line)[1]
+			w.ESSID = strings.Join(strings.Fields(line)[1:], " ")
 		}
 	}
 	if err = scanner.Err(); err != nil {
