@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	sysinfo "github.com/qjcg/barr/pkg/sysinfo"
+	"github.com/qjcg/barr/pkg/sysinfo"
 )
 
 // StatusBar describes a statusbar.
