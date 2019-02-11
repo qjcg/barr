@@ -1,9 +1,14 @@
-BIN = barr
+GO := go1.12beta2
+CMD_PATH := $(shell go list -m)/cmd/barr
+BUILD_DIR := ./build/package
+BIN := $(BUILD_DIR)/barr
+VERSION := $(shell git describe --tags)
 
 all:
-	go build -o ${BIN} ./cmd/barr
-	upx ${BIN}
-	holo-build --format=pacman ./build/package/holo.toml
+	@$(GO) build -ldflags '-X $(CMD_PATH).Version=$(VERSION) -s -w' -o $(BIN) $(CMD_PATH)
+	@upx $(BIN)
+	@ln -sf $(PWD)/init/barr.service $(BUILD_DIR)/
+	@cd $(BUILD_DIR); holo-build --force --format=pacman holo.toml
 
 clean:
-	rm -f ${BIN} $(wildcard *.pkg.tar.xz)
+	rm -f $(BIN) $(wildcard *.pkg.tar.xz)
