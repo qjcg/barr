@@ -1,125 +1,41 @@
 package sysinfo
 
 import (
-	"bufio"
 	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
-	"path/filepath"
 	"strconv"
-	"strings"
 
-	"gonum.org/v1/gonum/stat"
+	"github.com/distatus/battery"
 )
 
-// FIXME: Generalize to use *io.Reader instead of *os.File to improve
-// testability, either here or in Capacity().
-type Battery struct {
+// Battery represents battery information.
+type Battery struct{}
 
-	// Each source will contain the current battery capacity as a
-	// percentage (string), as in /sys/class/power_supply/BAT0/capacity .
-	Sources []*os.File
-}
-
-// Str returns battery info as a string.
+// String returns battery info in a textual format.
 func (b *Battery) String() string {
-	symbol := ""
-	if Charging() {
-		symbol = "AC"
-	}
-
-	if len(b.Sources) > 0 {
-		return fmt.Sprintf("%s %s%%",
-			symbol,
-			strconv.FormatFloat(b.Capacity(), 'f', 0, 64))
-	} else {
-		// Return the empty string if we have no sources.
+	batteries, err := battery.GetAll()
+	if err != nil {
 		return ""
 	}
-}
 
-// Spark returns battery info as a sparkline.
-func (b *Battery) Spark() string {
-	fmtStr := "🔋  %s%%"
-	if Charging() {
-		fmtStr = "🔌 %s%%"
+	if len(batteries) == 0 {
+		return ""
 	}
 
-	return fmt.Sprintf(fmtStr, b.Capacity())
-}
+	var charging bool
+	var capsCur, capsFull float64
+	for _, bat := range batteries {
+		capsCur += bat.Current
+		capsFull += bat.Full
 
-func NewBattery() (*Battery, error) {
-	var bat Battery
-
-	matches, err := filepath.Glob("/sys/class/power_supply/BAT*/capacity")
-	if err != nil {
-		return &bat, err
-	}
-
-	for _, m := range matches {
-		f, err := os.Open(m)
-		if err != nil {
-			return &bat, err
-		}
-		//defer f.Close()
-
-		bat.Sources = append(bat.Sources, f)
-	}
-
-	return &bat, nil
-}
-
-// Charging returns true if AC power plugged in.
-func Charging() bool {
-	f := "/sys/class/power_supply/AC/online"
-
-	if _, err := os.Stat(f); os.IsNotExist(err) {
-		return false
-	}
-
-	cByt, err := ioutil.ReadFile(f)
-	if err != nil {
-		log.Println(err)
-		return false
-	}
-
-	// "0": false, "1": true
-	return cByt[0] == '1'
-}
-
-// Capacity returns the percentage battery capacity remaining, *averaged*
-// accross all sources.
-func (b *Battery) Capacity() float64 {
-
-	var capacities []float64
-	for _, src := range b.Sources {
-
-		// Create a reader from src *os.File.
-		r := bufio.NewReader(src)
-
-		// Read until newline, and then trim the newline.
-		s, err := r.ReadString('\n')
-		if err != nil {
-			log.Fatal(err)
-		}
-		s = strings.TrimSpace(s)
-
-		// Parse the string as an fp number and append to capacities slice.
-		num, err := strconv.ParseFloat(s, 64)
-		if err != nil {
-			log.Fatal(err)
-		}
-		capacities = append(capacities, num)
-
-		// Move file handle cursor back to beginning. This avoids the
-		// next call to Capacity() failing upon finding no data at end
-		// of file (where the cursor is before this call to Seek()).
-		_, err = src.Seek(0, 0)
-		if err != nil {
-			log.Fatal(err)
+		if bat.State == battery.Charging || bat.State == battery.Full {
+			charging = true
 		}
 	}
+	pctBatRemaining := capsCur / capsFull * 100
 
-	return stat.Mean(capacities, nil)
+	if charging {
+		return fmt.Sprintf("AC %s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+	} else {
+		return fmt.Sprintf("%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+	}
 }
