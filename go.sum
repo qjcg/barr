@@ -1,3 +1,5 @@
+github.com/distatus/battery v0.0.0-20170521010419-916919eb43bd h1:rxw7AZpSwNgPPFdxDNSwQ+TfvOjmSGDK6tlpY7vw9bw=
+github.com/distatus/battery v0.0.0-20170521010419-916919eb43bd/go.mod h1:gGO7GxHTi1zlRT+cAj8uGG0/8HFiqAeH0TJvoipnuPs=
 golang.org/x/exp v0.0.0-20180321215751-8460e604b9de/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
 golang.org/x/exp v0.0.0-20190125153040-c74c464bbbf2 h1:y102fOLFqhV41b+4GPiJoa0k/x+pJcEi2/HB1Y5T6fU=
 golang.org/x/exp v0.0.0-20190125153040-c74c464bbbf2/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=
