@@ -2,6 +2,7 @@ package sysinfo
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strconv"
 
 	"github.com/distatus/battery"
@@ -21,21 +22,26 @@ func (b *Battery) String() string {
 		return ""
 	}
 
-	var charging bool
 	var capsCur, capsFull float64
 	for _, bat := range batteries {
 		capsCur += bat.Current
 		capsFull += bat.Full
-
-		if bat.State == battery.Charging {
-			charging = true
-		}
 	}
 	pctBatRemaining := capsCur / capsFull * 100
 
-	if charging {
-		return fmt.Sprintf("b:AC%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
-	} else {
-		return fmt.Sprintf("b:%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+	if c, err := Charging(); c && err == nil {
+		return fmt.Sprintf("b:AC.%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
 	}
+
+	return fmt.Sprintf("b:%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+}
+
+// Charging returns true if power supply AC is online.
+func Charging() (bool, error) {
+	online, err := ioutil.ReadFile("/sys/class/power_supply/AC/online")
+	if err != nil {
+		return false, err
+	}
+	charging, err := strconv.ParseBool(string(online[0]))
+	return charging, err
 }
