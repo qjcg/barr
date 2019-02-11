@@ -27,15 +27,15 @@ func (b *Battery) String() string {
 		capsCur += bat.Current
 		capsFull += bat.Full
 
-		if bat.State == battery.Charging || bat.State == battery.Full {
+		if bat.State == battery.Charging {
 			charging = true
 		}
 	}
 	pctBatRemaining := capsCur / capsFull * 100
 
 	if charging {
-		return fmt.Sprintf("AC %s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+		return fmt.Sprintf("b:AC%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
 	} else {
-		return fmt.Sprintf("%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+		return fmt.Sprintf("b:%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
 	}
 }

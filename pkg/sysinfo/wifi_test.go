@@ -2,7 +2,7 @@ package sysinfo
 
 import "testing"
 
-func TestGetESSID(t *testing.T) {
+func TestWifiString(t *testing.T) {
 	var w WifiData
 	err := w.getESSID()
 	if err != nil {
