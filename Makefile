@@ -11,4 +11,4 @@ all:
 	@cd $(BUILD_DIR); holo-build --force --format=pacman holo.toml
 
 clean:
-	rm -f $(BIN) $(wildcard *.pkg.tar.xz)
+	rm -f $(BIN) $(wildcard $(BUILD_DIR)/*.pkg.tar.xz)
