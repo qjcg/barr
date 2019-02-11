@@ -1,6 +1,6 @@
 [package]
 name = "barr"
-version = "1.11.1"
+version = "1.14.0"
 author = "John Gosset <john@gossetx.com>"
 description = "A statusbar generator for dwm(1)"
 architecture = "x86_64"
