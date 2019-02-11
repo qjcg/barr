@@ -30,17 +30,13 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Create a new *sysinfo.Battery.
-	bat, err := sysinfo.NewBattery()
-	if err != nil {
-		log.Fatal("Error getting battery information:", err)
-	}
-
 	// Create a new StatusBar.
 	sb := StatusBar{
 		Stringers: []fmt.Stringer{
 			&sysinfo.WifiData{},
-			bat,
+			&sysinfo.Battery{},
+			&sysinfo.Disk{Dir: "/"},
+			&sysinfo.CryptoCurrency{Pair: "xbtcad"},
 			&sysinfo.LoadAvg{},
 			&sysinfo.DefaultTimeStamp,
 		},
