@@ -3,7 +3,6 @@ package sysinfo
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -36,6 +35,5 @@ func (c *CryptoCurrency) String() string {
 	if err != nil {
 		return "json decode error"
 	}
-	log.Printf("DEBUG: %#v\n", r)
-	return fmt.Sprintf("%#v", r)
+	return fmt.Sprintf("%.0f", r.Result.Pair.p[0])
 }
