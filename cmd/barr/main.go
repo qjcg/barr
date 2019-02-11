@@ -19,7 +19,11 @@ type StatusBar struct {
 	Stringers []fmt.Stringer
 }
 
+var separator string
+
 func main() {
+	flag.StringVar(&separator, "s", "  ", "output field separator")
+
 	version := flag.Bool("v", false, "print version")
 	xSetRootMode := flag.Bool("x", false, "xsetroot mode (loop and update)")
 	xSetRootModeFreq := flag.Duration("xf", time.Second*5, "xsetroot mode update frequency")
@@ -36,7 +40,8 @@ func main() {
 			&sysinfo.WifiData{},
 			&sysinfo.Battery{},
 			&sysinfo.Disk{Dir: "/"},
-			&sysinfo.CryptoCurrency{Pair: "xbtcad"},
+			// FIXME: Not working! Enable when fixed.
+			//&sysinfo.CryptoCurrency{Pair: "xbtcad"},
 			&sysinfo.LoadAvg{},
 			&sysinfo.DefaultTimeStamp,
 		},
@@ -83,7 +88,7 @@ func (sb *StatusBar) Get() string {
 		fields = append(fields, s.String())
 	}
 
-	output = strings.Join(fields, "  ")
+	output = strings.Join(fields, separator)
 	output = strings.Trim(output, " ")
 
 	return output
