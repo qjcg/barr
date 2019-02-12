@@ -30,10 +30,10 @@ func (c *CryptoCurrency) String() string {
 
 	defer resp.Body.Close()
 
-	var r APIResponse
+	var r interface{}
 	err = json.NewDecoder(resp.Body).Decode(&r)
 	if err != nil {
 		return "json decode error"
 	}
-	return fmt.Sprintf("%.0f", r.Result.Pair.p[0])
+	return fmt.Sprintf("%#v", r)
 }
