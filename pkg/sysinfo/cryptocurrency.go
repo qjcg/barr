@@ -14,7 +14,7 @@ type APIResponse struct {
 		Pair struct {
 			p [2]float64 `json:"p"`
 		} `json:"XXBTZCAD"`
-	}
+	} `json:"result"`
 }
 
 type CryptoCurrency struct {
@@ -30,10 +30,10 @@ func (c *CryptoCurrency) String() string {
 
 	defer resp.Body.Close()
 
-	var r interface{}
+	var r APIResponse
 	err = json.NewDecoder(resp.Body).Decode(&r)
 	if err != nil {
 		return "json decode error"
 	}
-	return fmt.Sprintf("%#v", r)
+	return fmt.Sprintf("%+v", r)
 }
