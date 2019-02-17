@@ -52,12 +52,12 @@ func main() {
 		// Clear screen and exit when interrupt signal received.
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt, os.Kill)
-		go func() {
+		go func(c chan os.Signal) {
 			for range c {
 				exec.Command("/usr/bin/xsetroot", "-name", "barr stopped").Run()
 				os.Exit(0)
 			}
-		}()
+		}(c)
 
 		// Print once right away.
 		err := sb.UpdateXRootWindowTitle()
@@ -85,7 +85,11 @@ func (sb *StatusBar) Get() string {
 	var output string
 
 	for _, s := range sb.Stringers {
-		fields = append(fields, s.String())
+		str := s.String()
+		if str == "" {
+			continue
+		}
+		fields = append(fields, str)
 	}
 
 	output = strings.Join(fields, separator)
