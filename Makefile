@@ -1,4 +1,4 @@
-GO := go1.12beta2
+GO := go
 CMD_PATH := $(shell go list -m)/cmd/barr
 BUILD_DIR := ./build/package
 BIN := $(BUILD_DIR)/barr
