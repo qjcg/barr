@@ -12,7 +12,7 @@ const URLTemplate = `https://api.kraken.com/0/public/Ticker?pair=%s`
 type APIResponse struct {
 	Result struct {
 		Pair struct {
-			p [2]float64 `json:"p"`
+			P [2]string
 		} `json:"XXBTZCAD"`
 	} `json:"result"`
 }
