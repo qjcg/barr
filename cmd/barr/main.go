@@ -31,6 +31,7 @@ func main() {
 			// FIXME: Not working! Enable when fixed.
 			//&sysinfo.CryptoCurrency{Pair: "xbtcad"},
 			&sysinfo.LoadAvg{},
+			&sysinfo.Volume{},
 			&sysinfo.DefaultTimeStamp,
 		},
 	}
