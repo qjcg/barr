@@ -12,7 +12,7 @@ type TimeStamp struct {
 var (
 	// Normal mode.
 	DefaultTimeStamp = TimeStamp{
-		Fmt: "Mon Jan 2, 3:04pm MST",
+		Fmt: "Mon Jan 2, 3:04pm",
 	}
 
 	// Test mode (more frequent updates).
