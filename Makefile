@@ -1,4 +1,4 @@
-CMD_PATH := $(shell go list -m)/cmd/barr
+CMD_PATH := $(shell GO111MODULE=on go list -m)/cmd/barr
 BUILD_DIR := $(abspath ./build)
 BIN := $(BUILD_DIR)/barr
 VERSION := $(shell git describe --tags)
