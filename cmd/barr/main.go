@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/qjcg/barr/pkg/sysinfo"
+	"github.com/qjcg/barr/pkg/blocks"
 )
 
 func main() {
@@ -26,14 +26,14 @@ func main() {
 	sb := StatusBar{
 		Separator: *flagSeparator,
 		Stringers: []fmt.Stringer{
-			&sysinfo.WifiData{},
-			&sysinfo.Battery{},
-			&sysinfo.Disk{Dir: "/"},
+			&blocks.WifiData{},
+			&blocks.Battery{},
+			&blocks.Disk{Dir: "/"},
 			// FIXME: Not working! Enable when fixed.
-			//&sysinfo.CryptoCurrency{Pair: "xbtcad"},
-			&sysinfo.LoadAvg{},
-			&sysinfo.Volume{},
-			&sysinfo.DefaultTimeStamp,
+			//&blocks.CryptoCurrency{Pair: "xbtcad"},
+			&blocks.LoadAvg{},
+			&blocks.Volume{},
+			&blocks.DefaultTimeStamp,
 		},
 	}
 
