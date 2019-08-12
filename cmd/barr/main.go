@@ -10,20 +10,21 @@ import (
 	"github.com/qjcg/barr/pkg/sysinfo"
 )
 
-var separator string
-
 func main() {
-	flag.StringVar(&separator, "s", "  ", "output field separator")
-	version := flag.Bool("v", false, "print version")
+	flagSeparator := flag.String("s", "  ", "output field separator")
+	flagVersion := flag.Bool("v", false, "print version")
 	flag.Parse()
 
-	if *version {
+	if *flagVersion {
 		fmt.Println(Version)
 		os.Exit(0)
 	}
 
 	// Create a new StatusBar.
+	// TODO: Accept config from environment and/or config file as well as
+	// defining a default.
 	sb := StatusBar{
+		Separator: *flagSeparator,
 		Stringers: []fmt.Stringer{
 			&sysinfo.WifiData{},
 			&sysinfo.Battery{},
@@ -41,24 +42,21 @@ func main() {
 
 // StatusBar describes a statusbar.
 type StatusBar struct {
+	Separator string
 	Stringers []fmt.Stringer
 }
 
 // Get returns a status string.
 func (sb *StatusBar) Get() string {
 	var fields []string
-	var output string
-
 	for _, s := range sb.Stringers {
 		str := s.String()
+		// If a Stringer returns the empty string, it's skipped.
 		if str == "" {
 			continue
 		}
-		fields = append(fields, str)
+		fields = append(fields, strings.TrimSpace(str))
 	}
 
-	output = strings.Join(fields, separator)
-	output = strings.Trim(output, " ")
-
-	return output
+	return strings.Join(fields, sb.Separator)
 }
