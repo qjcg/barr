@@ -3,6 +3,8 @@ The barr command prints out a status line for use with minimalistic window manag
 # Features
 
 - simple
+- lightweight
+- easy to extend (blocks simply need to implement the [fmt.Stringer](https://golang.org/pkg/fmt/#Stringer) interface)
 
 
 # Usage
@@ -25,9 +27,9 @@ bar {
 
 # External Tool Dependencies
 
-The `barr` command itself does not depend on any external tools, but some individual modules do.
+The `barr` command itself does not depend on any external tools, but some individual blocks do.
 
-Specifically, the modules below have external tool dependencies:
+Specifically, the blocks below have external tool dependencies:
 
 - volume: depends on `pactl`
 - wifi: depends on `iw`
