@@ -7,6 +7,15 @@ The barr command prints out a status line for use with minimalistic window manag
 - easy to extend (blocks simply need to implement the [fmt.Stringer](https://golang.org/pkg/fmt/#Stringer) interface)
 
 
+# Install
+
+Download the [latest release](https://github.com/qjcg/barr/releases/latest) or install using use `go get`:
+
+```sh
+go get -u github.com/qjcg/barr/cmd/barr
+```
+
+
 # Usage
 
 ```shell
@@ -18,8 +27,9 @@ barr
 
 Add a `status_command` line like this to your [i3](https://i3wm.org/) or [Sway](https://swaywm.org) config file (adjusting the sleep value as needed):
 
-```sh
+```
 bar {
+	...
 	status_command while barr; do sleep 5 ; done
 }
 ```
