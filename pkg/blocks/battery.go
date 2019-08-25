@@ -30,7 +30,7 @@ func (b *Battery) String() string {
 	pctBatRemaining := capsCur / capsFull * 100
 
 	if c, err := Charging(); c && err == nil {
-		return fmt.Sprintf("🔋:AC.%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+		return fmt.Sprintf("⚡:AC.%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
 	}
 
 	return fmt.Sprintf("🔋:%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
