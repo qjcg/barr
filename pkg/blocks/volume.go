@@ -32,8 +32,8 @@ func (v *Volume) String() string {
 	}
 
 	if v.Mute {
-		return fmt.Sprintf("%s %s", "🔇", v.Level)
+		return fmt.Sprintf("🔇%s", v.Level)
 	} else {
-		return fmt.Sprintf("%s %s", "🔊", v.Level)
+		return fmt.Sprintf("🔊%s", v.Level)
 	}
 }
