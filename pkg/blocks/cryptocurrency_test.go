@@ -2,7 +2,7 @@
 
 // NOTE: Tests in this file require that the disk be present on
 // the test system to work (hence the "integration" build tag).
-package sysinfo
+package blocks
 
 import (
 	"testing"
