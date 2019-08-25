@@ -30,10 +30,10 @@ func (b *Battery) String() string {
 	pctBatRemaining := capsCur / capsFull * 100
 
 	if c, err := Charging(); c && err == nil {
-		return fmt.Sprintf("b:AC.%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+		return fmt.Sprintf("🔋:AC.%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
 	}
 
-	return fmt.Sprintf("b:%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
+	return fmt.Sprintf("🔋:%s%%", strconv.FormatFloat(pctBatRemaining, 'f', 0, 64))
 }
 
 // Charging returns true if power supply AC is online.
