@@ -1,12 +1,16 @@
-// See swaybar-protocol(7).
+// swaybar is an library for implementing the swaybar-protocol(7).
 package swaybar
+
+import (
+	"os"
+)
 
 // Header represents a swaybar-protocol header.
 type Header struct {
 	Version     int
 	ClickEvents bool
-	ContSignal  int
-	StopSignal  int
+	ContSignal  os.Signal
+	StopSignal  os.Signal
 }
 
 // Body represents a swaybar-protocol body.
