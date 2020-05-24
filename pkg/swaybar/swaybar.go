@@ -3,19 +3,22 @@ package swaybar
 
 import (
 	"os"
+	"syscall"
 )
 
 // Header represents a swaybar-protocol header.
 type Header struct {
-	Version     int
-	ClickEvents bool
-	ContSignal  os.Signal
-	StopSignal  os.Signal
+	Version     int       `json:"version"`
+	ClickEvents bool      `json:"click_events"`
+	ContSignal  os.Signal `json:"cont_signal"`
+	StopSignal  os.Signal `json:"stop_signal"`
 }
 
-// Body represents a swaybar-protocol body.
-type Body struct {
-	StatusLines []StatusLine
+var DefaultHeader = Header{
+	Version:     1,
+	ClickEvents: true,
+	ContSignal:  syscall.SIGCONT,
+	StopSignal:  syscall.SIGSTOP,
 }
 
 // StatusLine is a slice of Blocks representing a complete swaybar statusline.
@@ -25,22 +28,22 @@ type StatusLine struct {
 
 // Block represents a single item in a StatusLine.
 type Block struct {
-	FullText            string
-	ShortText           string
+	FullText            string `json:"full_text"`
+	ShortText           string `json:"short_text"`
 	Color               string
 	Background          string
 	Border              string
-	BorderTop           int
-	BorderBottom        int
-	BorderLeft          int
-	BorderRight         int
-	MinWidth            int
+	BorderTop           int `json:"border_top"`
+	BorderBottom        int `json:"border_bottom"`
+	BorderLeft          int `json:"border_left"`
+	BorderRight         int `json:"border_right"`
+	MinWidth            int `json:"min_width"`
 	Align               string
 	Name                string
 	Instance            string
 	Urgent              bool
 	Separator           bool
-	SeparatorBlockWidth int
+	SeparatorBlockWidth int `json:"separator_block_width"`
 	Markup              string
 }
 
