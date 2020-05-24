@@ -2,10 +2,12 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/qjcg/barr/pkg/blocks"
 )
@@ -37,7 +39,14 @@ func main() {
 		},
 	}
 
-	fmt.Println(sb.Get())
+	ticker := time.NewTicker(time.Second * 5)
+	enc := json.NewEncoder(os.Stdout)
+	for range ticker.C {
+		err := enc.Encode([]string{sb.Get()})
+		if err != nil {
+			enc.Encode(err)
+		}
+	}
 }
 
 // StatusBar describes a statusbar.
