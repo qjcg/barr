@@ -7,9 +7,10 @@ import (
 
 func TestLoadAvg(t *testing.T) {
 	var la LoadAvg
-	curLa := la.String()
-	if m, _ := regexp.MatchString("([0-9]+.[0-9]{2} ?){3}", curLa); !m {
-		t.Fatalf("actual output does not match regexp: %s", curLa)
+	got := la.String()
+	reLoadAvg := `([0-9]+.[0-9]{2} ?){3}`
+	if m, _ := regexp.MatchString(reLoadAvg, got); !m {
+		t.Fatalf("Wanted regex match for %s, got %s", reLoadAvg, got)
 	}
-	t.Logf("Current load average: %s\n", curLa)
+	t.Logf("Current load average: %s\n", got)
 }
