@@ -24,12 +24,12 @@ go get github.com/qjcg/barr/cmd/barr
 
 ### With i3 or Sway
 
-Add a `status_command` line like this to your [i3](https://i3wm.org/) or [Sway](https://swaywm.org) config file (adjusting the sleep value as needed):
+Add a `status_command` line like this to your [i3](https://i3wm.org/) or [Sway](https://swaywm.org) config file:
 
 ```
 bar {
-	...
 	status_command barr
+	...
 }
 ```
 
@@ -46,4 +46,4 @@ Specifically, the blocks below have external tool dependencies:
 
 ## License
 
-MIT
+[MIT](./LICENSE)
