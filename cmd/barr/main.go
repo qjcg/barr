@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
 
 	"github.com/qjcg/barr/pkg/blocks"
+	"github.com/qjcg/barr/pkg/swaybar"
 )
 
 func main() {
@@ -39,14 +41,27 @@ func main() {
 		},
 	}
 
-	ticker := time.NewTicker(time.Second * 5)
-	enc := json.NewEncoder(os.Stdout)
-	for range ticker.C {
-		err := enc.Encode([]string{sb.Get()})
-		if err != nil {
-			enc.Encode(err)
+	go func() {
+		dec := json.NewDecoder(os.Stdin)
+		for dec.More() {
+			var event swaybar.ClickEvent
+			err := dec.Decode(&event)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("%#v\n", event)
 		}
+	}()
+
+	enc := json.NewEncoder(os.Stdout)
+	enc.Encode(swaybar.DefaultHeader)
+
+	fmt.Fprintln(os.Stdout, "[")
+	ticker := time.NewTicker(time.Second * 5)
+	for range ticker.C {
+		fmt.Fprintf(os.Stdout, "[ \"%s\" ],\n", sb.Get())
 	}
+	defer fmt.Fprintln(os.Stdout, "]")
 }
 
 // StatusBar describes a statusbar.
