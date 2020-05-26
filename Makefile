@@ -13,6 +13,8 @@ $(BIN):
 clean:
 	rm -rf $(BUILD_DIR)
 
+cleanbuild: clean $(BIN)
+
 ifdef GOBIN
 INSTALL_DIR := $(GOBIN)
 
