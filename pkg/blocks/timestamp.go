@@ -2,26 +2,22 @@ package blocks
 
 import (
 	"time"
+
+	"github.com/qjcg/barr/pkg/swaybar"
 )
 
-type TimeStamp struct {
-	Fmt string
-	time.Time
+var DefaultTimestamp = Timestamp{}
+
+type Timestamp struct {
+	swaybar.Block
 }
 
-var (
-	// Normal mode.
-	DefaultTimeStamp = TimeStamp{
-		Fmt: "Mon Jan 2, 3:04pm",
-	}
-
-	// Test mode (more frequent updates).
-	TestTimeStamp = TimeStamp{
-		Fmt: "Mon Jan 2, 3:04:05pm MST",
-	}
+const (
+	fmtShort = "Mon Jan 2, 3:04pm"
+	fmtLong  = "Mon Jan 2, 3:04:05pm MST"
 )
 
-// String implements the fmt.Stringer interface.
-func (ts TimeStamp) String() string {
-	return time.Now().Format(ts.Fmt)
+// Update updates the Timestamp FullText.
+func (ts *Timestamp) Update() {
+	ts.FullText = time.Now().Format(fmtShort)
 }

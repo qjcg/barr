@@ -5,17 +5,26 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
-	"strings"
 	"time"
+
+	toml "github.com/pelletier/go-toml"
 
 	"github.com/qjcg/barr/pkg/blocks"
 	"github.com/qjcg/barr/pkg/swaybar"
 )
 
+var defaultBlock = swaybar.Block{
+	Color:      "#00ff00",
+	Background: "#0000ff",
+	Border:     "#ff0000",
+	Markup:     "",
+}
+
 func main() {
-	flagSeparator := flag.String("s", "  ", "output field separator")
+	flagConfig := flag.String("c", "", "config file")
 	flagVersion := flag.Bool("v", false, "print version")
 	flag.Parse()
 
@@ -24,21 +33,11 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Create a new StatusBar.
-	// TODO: Accept config from environment and/or config file as well as
-	// defining a default.
-	sb := StatusBar{
-		Separator: *flagSeparator,
-		Stringers: []fmt.Stringer{
-			&blocks.WifiData{},
-			&blocks.Battery{},
-			&blocks.Volume{},
-			&blocks.Disk{Dir: "/"},
-			// FIXME: Not working! Enable when fixed.
-			//&blocks.CryptoCurrency{Pair: "xbtcad"},
-			&blocks.LoadAvg{},
-			&blocks.DefaultTimeStamp,
-		},
+	var config Config
+	c, err := ioutil.ReadFile(*flagConfig)
+	err = toml.Unmarshal(c, &config)
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	go func() {
@@ -53,34 +52,24 @@ func main() {
 		}
 	}()
 
+	// Create encoder and write the header.
 	enc := json.NewEncoder(os.Stdout)
 	enc.Encode(swaybar.DefaultHeader)
 
+	// Create a statusline.
+	sl := swaybar.StatusLine{
+		Blocks: []swaybar.Updater{c.Blocks...},
+	}
+
 	fmt.Fprintln(os.Stdout, "[")
+	sl.Update()
+	enc.Encode(sl.Blocks)
+	fmt.Fprintln(os.Stdout, ",")
 	ticker := time.NewTicker(time.Second * 5)
 	for range ticker.C {
-		fmt.Fprintf(os.Stdout, "[ \"%s\" ],\n", sb.Get())
+		sl.Update()
+		enc.Encode(sl.Blocks)
+		fmt.Fprintln(os.Stdout, ",")
 	}
 	defer fmt.Fprintln(os.Stdout, "]")
-}
-
-// StatusBar describes a statusbar.
-type StatusBar struct {
-	Separator string
-	Stringers []fmt.Stringer
-}
-
-// Get returns a status string.
-func (sb *StatusBar) Get() string {
-	var fields []string
-	for _, s := range sb.Stringers {
-		str := s.String()
-		// If a Stringer returns the empty string, it's skipped.
-		if str == "" {
-			continue
-		}
-		fields = append(fields, strings.TrimSpace(str))
-	}
-
-	return strings.Join(fields, sb.Separator)
 }
