@@ -34,10 +34,16 @@ func main() {
 	}
 
 	var config Config
-	c, err := ioutil.ReadFile(*flagConfig)
-	err = toml.Unmarshal(c, &config)
-	if err != nil {
-		log.Fatal(err)
+	if len(*flagConfig) > 0 {
+		c, err := ioutil.ReadFile(*flagConfig)
+		err = toml.Unmarshal(c, &config)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		config.Blocks = []swaybar.Updater{
+			&blocks.DefaultTimestamp,
+		}
 	}
 
 	go func() {
@@ -57,9 +63,8 @@ func main() {
 	enc.Encode(swaybar.DefaultHeader)
 
 	// Create a statusline.
-	sl := swaybar.StatusLine{
-		Blocks: []swaybar.Updater{c.Blocks...},
-	}
+	sl := swaybar.StatusLine{}
+	sl.Blocks = append(sl.Blocks, config.Blocks...)
 
 	fmt.Fprintln(os.Stdout, "[")
 	sl.Update()
