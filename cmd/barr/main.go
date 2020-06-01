@@ -27,7 +27,7 @@ func main() {
 	}
 
 	var config Config
-	if len(*flagConfig) > 0 {
+	if *flagConfig != "" {
 		c, err := ioutil.ReadFile(*flagConfig)
 		err = toml.Unmarshal(c, &config)
 		if err != nil {
