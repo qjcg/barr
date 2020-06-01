@@ -9,6 +9,9 @@ import (
 )
 
 func TestDiskString(t *testing.T) {
-	d := Disk{Dir: "/"}
-	t.Log(d.String())
+	d := DefaultDisk
+	d.Dir = "/"
+	d.Update()
+
+	t.Log(d.FullText)
 }
