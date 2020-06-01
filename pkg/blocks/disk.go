@@ -40,7 +40,7 @@ func (d *Disk) Update() {
 		line := scanner.Text()
 		avail := strings.Fields(line)[3]
 
-		d.FullText = fmt.Sprintf("%s:%s", d.Dir, avail)
+		d.FullText = fmt.Sprintf("%s %s", d.Dir, avail)
 	}
 
 	// Handle any scanning errors.
