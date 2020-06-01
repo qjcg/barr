@@ -38,11 +38,12 @@ func main() {
 		// Configure blocks.
 		disk := blocks.DefaultDisk
 		disk.Dir = "/"
-		cryptoCurrency := blocks.DefaultCryptoCurrency
-		cryptoCurrency.Pair = "xbtcad"
+		// TODO: Uncomment cryptoCurrency once block-specific update intervals are implemented (GET each 5s is too much).
+		//cryptoCurrency := blocks.DefaultCryptoCurrency
+		//cryptoCurrency.Pair = "xbtcad"
 
 		config.Blocks = []protocol.Updater{
-			&cryptoCurrency,
+			//&cryptoCurrency,
 			&disk,
 			&blocks.DefaultLoadAvg,
 			&blocks.DefaultTimestamp,
