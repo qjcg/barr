@@ -31,6 +31,7 @@ func (la *LoadAvg) Update() {
 	if err != nil {
 		log.Println("couldn't get sysinfo:", err)
 		la.FullText = err.Error()
+		la.MinWidth = la.FullText + "11"
 	}
 
 	la.load1 = float64(si.Loads[0]) / scale
@@ -38,4 +39,5 @@ func (la *LoadAvg) Update() {
 	la.load15 = float64(si.Loads[2]) / scale
 
 	la.FullText = fmt.Sprintf("%.2f %.2f %.2f", la.load1, la.load5, la.load15)
+	la.MinWidth = la.FullText + "11"
 }
