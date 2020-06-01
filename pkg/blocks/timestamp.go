@@ -22,5 +22,4 @@ const (
 // Update updates the Timestamp FullText.
 func (ts *Timestamp) Update() {
 	ts.FullText = time.Now().Format(fmtShort)
-	ts.MinWidth = ts.FullText + "11"
 }
