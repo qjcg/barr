@@ -6,7 +6,11 @@ import (
 	"github.com/qjcg/barr/pkg/swaybar"
 )
 
-var DefaultTimestamp = Timestamp{}
+var DefaultTimestamp = Timestamp{
+	Block: swaybar.Block{
+		MinWidth: 100,
+	},
+}
 
 type Timestamp struct {
 	swaybar.Block
