@@ -55,6 +55,7 @@ Please make sure to update tests as appropriate.
 
 - [go-i3bar](https://github.com/g0dsCookie/go-i3bar)
 - [i3bargo](https://github.com/metalmatze/i3bargo)
+- [yagostatus](https://github.com/burik666/yagostatus)
 - [i3status-rust](https://github.com/greshake/i3status-rust)
 
 
