@@ -5,14 +5,14 @@ import (
 	"log"
 	"syscall"
 
-	"github.com/qjcg/barr/pkg/swaybar"
+	"github.com/qjcg/barr/pkg/protocol"
 )
 
 // See https://github.com/capnm/sysinfo/blob/master/sysinfo.go
 const scale = 65536.0
 
 var DefaultLoadAvg = LoadAvg{
-	Block: swaybar.DefaultBlock,
+	Block: protocol.DefaultBlock,
 }
 
 // LoadAvg represents the system load average (1, 5, and 15 minutes).
@@ -21,7 +21,7 @@ type LoadAvg struct {
 	load5  float64
 	load15 float64
 
-	swaybar.Block
+	protocol.Block
 }
 
 // Update updates the LoadAvg FullText.

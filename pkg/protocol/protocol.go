@@ -1,6 +1,9 @@
-// swaybar is an library for implementing the swaybar-protocol(7).
-// See https://i3wm.org/docs/i3bar-protocol.html
-package swaybar
+// protocol is a package that implements the i3 / swaybar protocol.
+//
+// See:
+//   - https://i3wm.org/docs/i3bar-protocol.html
+//   - swaybar-protocol(7)
+package protocol
 
 import (
 	"os"
@@ -70,7 +73,7 @@ var DefaultBlock = Block{
 	SeparatorBlockWidth: 25,
 }
 
-// ClickEvent represents a protocol click event.
+// ClickEvent represents a click event.
 type ClickEvent struct {
 	Name      string `json:"name,omitempty"`
 	Instance  string `json:"instance,omitempty"`

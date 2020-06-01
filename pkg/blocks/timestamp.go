@@ -3,15 +3,15 @@ package blocks
 import (
 	"time"
 
-	"github.com/qjcg/barr/pkg/swaybar"
+	"github.com/qjcg/barr/pkg/protocol"
 )
 
 var DefaultTimestamp = Timestamp{
-	Block: swaybar.DefaultBlock,
+	Block: protocol.DefaultBlock,
 }
 
 type Timestamp struct {
-	swaybar.Block
+	protocol.Block
 }
 
 const (

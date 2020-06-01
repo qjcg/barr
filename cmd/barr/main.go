@@ -13,7 +13,7 @@ import (
 	toml "github.com/pelletier/go-toml"
 
 	"github.com/qjcg/barr/pkg/blocks"
-	"github.com/qjcg/barr/pkg/swaybar"
+	"github.com/qjcg/barr/pkg/protocol"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 			log.Fatal(err)
 		}
 	} else {
-		config.Blocks = []swaybar.Updater{
+		config.Blocks = []protocol.Updater{
 			&blocks.DefaultLoadAvg,
 			&blocks.DefaultTimestamp,
 		}
@@ -44,7 +44,7 @@ func main() {
 	go func() {
 		dec := json.NewDecoder(os.Stdin)
 		for dec.More() {
-			var event swaybar.ClickEvent
+			var event protocol.ClickEvent
 			err := dec.Decode(&event)
 			if err != nil {
 				log.Fatal(err)
@@ -58,10 +58,10 @@ func main() {
 	if *flagPrettyPrint {
 		enc.SetIndent("", "  ")
 	}
-	enc.Encode(swaybar.DefaultHeader)
+	enc.Encode(protocol.DefaultHeader)
 
 	// Create a statusline.
-	sl := swaybar.StatusLine{}
+	sl := protocol.StatusLine{}
 	sl.Blocks = append(sl.Blocks, config.Blocks...)
 
 	fmt.Fprintln(os.Stdout, "[")
