@@ -18,6 +18,7 @@ import (
 
 func main() {
 	flagConfig := flag.String("c", "", "config file")
+	flagPrettyPrint := flag.Bool("p", false, "pretty print JSON output")
 	flagVersion := flag.Bool("v", false, "print version")
 	flag.Parse()
 
@@ -54,6 +55,9 @@ func main() {
 
 	// Create encoder and write the header.
 	enc := json.NewEncoder(os.Stdout)
+	if *flagPrettyPrint {
+		enc.SetIndent("", "  ")
+	}
 	enc.Encode(swaybar.DefaultHeader)
 
 	// Create a statusline.
