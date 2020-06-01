@@ -66,7 +66,7 @@ var DefaultBlock = Block{
 	Color:               "#cccccc",
 	Align:               "right",
 	Separator:           true,
-	SeparatorBlockWidth: 15,
+	SeparatorBlockWidth: 25,
 	//MinWidth:            100,
 }
 
