@@ -7,7 +7,7 @@ import (
 	"syscall"
 )
 
-// Header represents a swaybar-protocol header.
+// Header represents a protocol header.
 type Header struct {
 	Version     int       `json:"version"`
 	ClickEvents bool      `json:"click_events,omitempty"`
@@ -23,12 +23,12 @@ var DefaultHeader = Header{
 	StopSignal:  syscall.SIGSTOP,
 }
 
-// Updater defines the Updater interface.
+// Updater defines an interface for structs that can Update their values.
 type Updater interface {
 	Update()
 }
 
-// StatusLine is a slice of Blocks representing a complete swaybar statusline.
+// StatusLine is a slice of Blocks representing a complete statusline.
 type StatusLine struct {
 	Blocks []Updater
 }
@@ -61,7 +61,7 @@ type Block struct {
 	Markup              string `json:"markup,omitempty"`
 }
 
-// DefaultBlock is a block providing default settings.
+// DefaultBlock provides a block with default settings.
 var DefaultBlock = Block{
 	Background:          "#000000",
 	Color:               "#cccccc",
@@ -70,7 +70,7 @@ var DefaultBlock = Block{
 	SeparatorBlockWidth: 25,
 }
 
-// ClickEvent represents a swaybar-protocol click event.
+// ClickEvent represents a protocol click event.
 type ClickEvent struct {
 	Name      string `json:"name,omitempty"`
 	Instance  string `json:"instance,omitempty"`
