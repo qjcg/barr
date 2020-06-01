@@ -62,12 +62,12 @@ type Block struct {
 
 // DefaultBlock is a block providing default settings.
 var DefaultBlock = Block{
-	Background: "#0000ff",
-	Color:      "#00ff00",
-	Align:      "right",
-	Separator:  true,
+	Background:          "#0000ff",
+	Color:               "#00ff00",
+	Align:               "right",
+	Separator:           true,
+	SeparatorBlockWidth: 90,
 	//MinWidth:            100,
-	//SeparatorBlockWidth: 9,
 }
 
 // ClickEvent represents a swaybar-protocol click event.
