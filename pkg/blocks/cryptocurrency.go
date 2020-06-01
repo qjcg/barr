@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/qjcg/barr/pkg/protocol"
 )
 
 // See https://www.kraken.com/en-gb/features/api#get-ticker-info
@@ -17,15 +19,21 @@ type APIResponse struct {
 	} `json:"result"`
 }
 
-type CryptoCurrency struct {
-	Pair string
+var DefaultCryptoCurrency = CryptoCurrency{
+	Block: protocol.DefaultBlock,
 }
 
-func (c *CryptoCurrency) String() string {
+type CryptoCurrency struct {
+	Pair string
+
+	protocol.Block
+}
+
+func (c *CryptoCurrency) Update() {
 	url := fmt.Sprintf(URLTemplate, c.Pair)
 	resp, err := http.Get(url)
 	if err != nil {
-		return "http error"
+		c.FullText = err.Error()
 	}
 
 	defer resp.Body.Close()
@@ -33,7 +41,9 @@ func (c *CryptoCurrency) String() string {
 	var r APIResponse
 	err = json.NewDecoder(resp.Body).Decode(&r)
 	if err != nil {
-		return "json decode error"
+		c.FullText = err.Error()
 	}
-	return fmt.Sprintf("%+v", r)
+
+	// P (volume weighted average price array): [today, last-24-hours]
+	c.FullText = fmt.Sprintf("%s: %s", c.Pair, r.Result.Pair.P[0])
 }

@@ -7,6 +7,9 @@ import (
 )
 
 func TestCryptoCurrency(t *testing.T) {
-	c := CryptoCurrency{Pair: "xbtcad"}
-	t.Log(c.String())
+	c := DefaultCryptoCurrency
+	c.Pair = "xbtcad"
+	c.Update()
+
+	t.Log(c.FullText)
 }
