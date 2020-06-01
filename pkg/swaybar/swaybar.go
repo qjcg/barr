@@ -23,7 +23,7 @@ var DefaultHeader = Header{
 	StopSignal:  syscall.SIGSTOP,
 }
 
-// Updater defines the interface.
+// Updater defines the Updater interface.
 type Updater interface {
 	Update()
 }
@@ -33,7 +33,7 @@ type StatusLine struct {
 	Blocks []Updater
 }
 
-// Update implements the Updater interface for StatusLine.
+// Update updates all Updaters in a StatusLine.
 func (sl *StatusLine) Update() {
 	for _, b := range sl.Blocks {
 		b.Update()
