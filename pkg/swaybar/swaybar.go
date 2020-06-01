@@ -15,6 +15,7 @@ type Header struct {
 	StopSignal  os.Signal `json:"stop_signal"`
 }
 
+// DefaultHeader is a Header providing default settings.
 var DefaultHeader = Header{
 	Version:     1,
 	ClickEvents: true,
