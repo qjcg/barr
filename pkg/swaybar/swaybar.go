@@ -62,8 +62,8 @@ type Block struct {
 
 // DefaultBlock is a block providing default settings.
 var DefaultBlock = Block{
-	Background:          "#0000ff",
-	Color:               "#00ff00",
+	Background:          "#000000",
+	Color:               "#cccccc",
 	Align:               "right",
 	Separator:           true,
 	SeparatorBlockWidth: 15,
