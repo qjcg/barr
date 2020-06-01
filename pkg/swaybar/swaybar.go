@@ -50,7 +50,7 @@ type Block struct {
 	BorderBottom        int    `json:"border_bottom"`
 	BorderLeft          int    `json:"border_left"`
 	BorderRight         int    `json:"border_right"`
-	MinWidth            int    `json:"min_width"`
+	MinWidth            string `json:"min_width"`
 	Align               string `json:"align"`
 	Name                string `json:"name"`
 	Instance            string `json:"instance"`
@@ -64,10 +64,9 @@ type Block struct {
 var DefaultBlock = Block{
 	Background:          "#000000",
 	Color:               "#cccccc",
-	Align:               "right",
+	Align:               "center",
 	Separator:           true,
 	SeparatorBlockWidth: 25,
-	//MinWidth:            100,
 }
 
 // ClickEvent represents a swaybar-protocol click event.
