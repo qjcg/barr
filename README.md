@@ -54,6 +54,7 @@ Please make sure to update tests as appropriate.
 ## Similar Projects
 
 - [go-i3bar](https://github.com/g0dsCookie/go-i3bar)
+- [i3status-rust](https://github.com/greshake/i3status-rust)
 
 
 ## License
