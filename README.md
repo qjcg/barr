@@ -51,6 +51,10 @@ discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
 
+## Similar Projects
+
+- [go-i3bar](https://github.com/g0dsCookie/go-i3bar)
+
 
 ## License
 
