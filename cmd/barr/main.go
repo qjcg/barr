@@ -35,7 +35,10 @@ func main() {
 			log.Fatal(err)
 		}
 	} else {
+		disk := blocks.DefaultDisk
+		disk.Dir = "/"
 		config.Blocks = []protocol.Updater{
+			&disk,
 			&blocks.DefaultLoadAvg,
 			&blocks.DefaultTimestamp,
 		}
