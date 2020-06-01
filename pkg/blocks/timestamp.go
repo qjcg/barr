@@ -8,7 +8,10 @@ import (
 
 var DefaultTimestamp = Timestamp{
 	Block: swaybar.Block{
-		MinWidth: 100,
+		Background: "#0000ff",
+		Color:      "#00ff00",
+		MinWidth:   100,
+		Align:      "right",
 	},
 }
 
