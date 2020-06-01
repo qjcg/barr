@@ -60,6 +60,14 @@ type Block struct {
 	Markup              string `json:"markup"`
 }
 
+// DefaultBlock is a block providing default settings.
+var DefaultBlock = Block{
+	Background: "#0000ff",
+	Color:      "#00ff00",
+	MinWidth:   100,
+	Align:      "right",
+}
+
 // ClickEvent represents a swaybar-protocol click event.
 type ClickEvent struct {
 	Name      string

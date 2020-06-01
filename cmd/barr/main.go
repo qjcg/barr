@@ -16,13 +16,6 @@ import (
 	"github.com/qjcg/barr/pkg/swaybar"
 )
 
-var defaultBlock = swaybar.Block{
-	Color:      "#00ff00",
-	Background: "#0000ff",
-	Border:     "#ff0000",
-	Markup:     "",
-}
-
 func main() {
 	flagConfig := flag.String("c", "", "config file")
 	flagVersion := flag.Bool("v", false, "print version")
@@ -42,6 +35,7 @@ func main() {
 		}
 	} else {
 		config.Blocks = []swaybar.Updater{
+			&blocks.DefaultLoadAvg,
 			&blocks.DefaultTimestamp,
 		}
 	}

@@ -7,12 +7,7 @@ import (
 )
 
 var DefaultTimestamp = Timestamp{
-	Block: swaybar.Block{
-		Background: "#0000ff",
-		Color:      "#00ff00",
-		MinWidth:   100,
-		Align:      "right",
-	},
+	Block: swaybar.DefaultBlock,
 }
 
 type Timestamp struct {
